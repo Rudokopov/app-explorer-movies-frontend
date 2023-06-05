@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import logo from "../../images/logo.svg";
 import styles from "./header.module.scss";
-import profileLogo from "../../images/profile.svg";
+import profileLogo from "../../images/profile-logo.png";
 
 const Header: React.FC = () => {
   const [isLoggin, setLoggin] = useState(true);
@@ -53,7 +53,6 @@ const Header: React.FC = () => {
                 <img src={profileLogo} alt="Иконка профиля" />
               </button>
             </li>
-            <li></li>
           </ul>
         </>
       )}

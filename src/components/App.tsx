@@ -6,6 +6,8 @@ import Student from "./Student/Student";
 import Technologies from "./Technologies/Technologies";
 import Footer from "./Footer/Footer";
 import { useState } from "react";
+import Search from "./Search/Search";
+import Cards from "./Cards/Cards";
 
 const App: React.FC = () => {
   const [isLoggin, setLoggin] = useState(true);
@@ -20,9 +22,11 @@ const App: React.FC = () => {
           <Student />
         </>
       ) : (
-        <About />
+        <>
+          <Search />
+          <Cards />
+        </>
       )}
-
       <Footer />
     </div>
   );

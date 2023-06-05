@@ -1,0 +1,46 @@
+.container {
+  max-width: 270px;
+  border-radius: 10px;
+  background-color: #222222;
+  overflow: hidden;
+  h3 {
+    margin: 0 0 10px 0;
+    padding: 0;
+    font-family: Inter;
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 16px;
+    color: #fff;
+  }
+
+  p {
+    margin: 0;
+    padding: 0 0 14px 12px;
+    font-family: Inter;
+    font-size: 11px;
+    font-weight: 400;
+    line-height: 13px;
+    color: #8b8b8b;
+  }
+}
+
+.image {
+  margin-bottom: 14px;
+  width: 270px;
+  height: 151px;
+}
+
+.content {
+  padding: 0 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  svg {
+    &.active {
+      rect {
+        fill: #2be080;
+      }
+    }
+  }
+}
