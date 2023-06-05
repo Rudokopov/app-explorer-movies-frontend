@@ -5,18 +5,27 @@ import Header from "./Header/Header";
 import Student from "./Student/Student";
 import Technologies from "./Technologies/Technologies";
 import Footer from "./Footer/Footer";
+import { useState } from "react";
 
-function App() {
+const App: React.FC = () => {
+  const [isLoggin, setLoggin] = useState(true);
   return (
     <div className={styles.container}>
       <Header />
-      <Banner />
-      <About />
-      <Technologies />
-      <Student />
+      {!isLoggin ? (
+        <>
+          <Banner />
+          <About />
+          <Technologies />
+          <Student />
+        </>
+      ) : (
+        <About />
+      )}
+
       <Footer />
     </div>
   );
-}
+};
 
 export default App;

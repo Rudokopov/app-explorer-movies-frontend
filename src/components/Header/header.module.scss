@@ -35,6 +35,14 @@
   &:hover {
     opacity: 0.5;
   }
+
+  &.isLoggin {
+    margin-left: 44px;
+
+    &:not(:last-child) {
+      margin-right: 16px;
+    }
+  }
 }
 
 .dedicated {
