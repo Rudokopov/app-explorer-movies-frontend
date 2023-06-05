@@ -1,0 +1,97 @@
+.container {
+  margin: 0 70px;
+}
+
+.title {
+  margin: 110px 0 70px 0;
+  padding: 0 0 30px 0;
+  font-family: Inter;
+  font-size: 22px;
+  font-weight: 400;
+  line-height: 27px;
+  letter-spacing: -0.04em;
+  color: #ffffff;
+  border-bottom: 1px solid #dadada;
+}
+
+.list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+
+  &__info {
+    margin: 0 0 110px 0;
+    padding: 0;
+    color: #ffffff;
+
+    li {
+      &:not(:last-child) {
+        margin-right: 40px;
+      }
+    }
+
+    h3 {
+      margin: 0 0 26px 0;
+      padding: 0;
+      font-family: Inter;
+      font-size: 20px;
+      font-weight: 400;
+      line-height: 24px;
+      letter-spacing: -0.04em;
+    }
+
+    p {
+      margin: 0;
+      padding: 0;
+      font-family: Inter;
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 20px;
+    }
+  }
+
+  &__progress {
+    margin-bottom: 110px;
+    h4 {
+      margin: 0;
+      padding: 0;
+      font-family: Inter;
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 17px;
+      text-align: center;
+    }
+
+    p {
+      margin: 14px 0 0 0;
+      padding: 0;
+      font-family: Inter;
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 17px;
+      text-align: center;
+      color: #8b8b8b;
+    }
+    .active_item {
+      width: 228px;
+      height: 36px;
+      background-color: #3ddc84;
+
+      h4 {
+        padding: 9px 14px;
+        color: #000;
+      }
+    }
+    .default_item {
+      width: 912px;
+      height: 36px;
+
+      h4 {
+        padding: 9px 356px;
+        background-color: #303030;
+        color: #fff;
+      }
+    }
+  }
+}

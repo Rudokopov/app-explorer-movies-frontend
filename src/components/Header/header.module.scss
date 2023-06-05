@@ -1,0 +1,45 @@
+.container {
+  margin: 18px 70px 20px 70px;
+  display: flex;
+  justify-content: space-between;
+
+  a {
+    justify-self: flex-start;
+  }
+}
+
+.content {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  list-style: none;
+  align-self: flex-end;
+  align-items: center;
+}
+
+.button {
+  all: unset;
+  margin: 0;
+  padding: 0;
+  color: #ffffff;
+  font-family: Inter;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 16px;
+  cursor: pointer;
+  transition: opacity 0.5s ease;
+
+  &:focus {
+    border: 1px solid #fff;
+  }
+  &:hover {
+    opacity: 0.5;
+  }
+}
+
+.dedicated {
+  margin-left: 30px;
+  padding: 8px 20px;
+  background-color: #3ddc84;
+  color: #000000;
+}
