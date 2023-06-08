@@ -3,7 +3,7 @@ import Card from "../Card/Card";
 import data from "../../cards.json";
 import styles from "./cards.module.scss";
 
-type CardData = {
+export type CardData = {
   image: string;
   title: string;
   duration: number;
