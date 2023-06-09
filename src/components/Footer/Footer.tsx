@@ -4,12 +4,14 @@ import styles from "./footer.module.scss";
 const Footer: React.FC = () => {
   return (
     <section className={styles.container}>
-      <p>Учебный проект Яндекс.Практикум х BeatFilm.</p>
+      <p className={styles.paragraph}>
+        Учебный проект Яндекс.Практикум х BeatFilm.
+      </p>
       <div className={styles.content}>
         <div>
           <span>&copy; {new Date().getFullYear()}</span>
         </div>
-        <ul>
+        <ul className={styles.content__list}>
           <li>
             <a href="#">Яндекс.Практикум</a>
           </li>

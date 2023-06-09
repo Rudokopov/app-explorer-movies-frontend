@@ -1,10 +1,15 @@
 .container {
-  margin: 18px 58px 20px 58px;
+  margin: 18px 58px 38px 58px;
   display: flex;
   justify-content: space-between;
 
   a {
     justify-self: flex-start;
+  }
+
+  @media (max-width: 768px) {
+    margin-left: 30px;
+    margin-right: 30px;
   }
 }
 

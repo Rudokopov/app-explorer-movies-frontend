@@ -1,12 +1,20 @@
 import React from "react";
-import Search from "../components/Search/Search";
-import Cards from "../components/Cards/Cards";
+import Header from "../components/Header/Header";
+import Banner from "../components/Banner/Banner";
+import About from "../components/About";
+import Technologies from "../components/Technologies/Technologies";
+import Student from "../components/Student/Student";
+import Footer from "../components/Footer/Footer";
 
 const Main = () => {
   return (
     <>
-      <Search />
-      <Cards />
+      <Header />
+      <Banner />
+      <About />
+      <Technologies />
+      <Student />
+      <Footer />
     </>
   );
 };

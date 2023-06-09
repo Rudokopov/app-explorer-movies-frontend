@@ -4,11 +4,15 @@ import styles from "./header.module.scss";
 import profileLogo from "../../images/profile-logo.png";
 
 const Header: React.FC = () => {
-  const [isLoggin, setLoggin] = useState(true);
+  const [isLoggin, setLoggin] = useState(false);
   return (
     <section className={styles.container}>
       {!isLoggin ? (
         <>
+          <a href="#">
+            <img src={logo} alt="logo" />
+          </a>
+
           <ul className={styles.content}>
             <li>
               <button className={styles.button} type="button">

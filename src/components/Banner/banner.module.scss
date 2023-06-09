@@ -6,6 +6,11 @@
   align-items: center;
   justify-content: center;
   background-color: #272727;
+
+  @media (max-width: 768px) {
+    margin-left: 20px;
+    margin-right: 20px;
+  }
 }
 
 .title {
@@ -19,6 +24,13 @@
   letter-spacing: -0.04em;
   color: #fff;
   text-align: center;
+
+  @media (max-width: 768px) {
+    font-size: 40px;
+    line-height: 52px;
+    margin-top: 350px;
+    margin-bottom: 314px;
+  }
 }
 
 .content {

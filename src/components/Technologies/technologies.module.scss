@@ -1,10 +1,20 @@
 .container {
   padding: 100px 70px 0 70px;
   background-color: #272727;
+
+  @media (max-width: 768px) {
+    padding-top: 90px;
+    padding-right: 50px;
+    padding-left: 50px;
+  }
 }
 
 .title {
   margin: 0 0 90px 0;
+
+  @media (max-width: 768px) {
+    margin-top: 90px;
+  }
 }
 
 .content {
@@ -13,7 +23,7 @@
   justify-content: center;
   align-items: center;
 
-  h3 {
+  &__title {
     margin: 0 0 26px 0;
     padding: 0;
     font-family: Inter;
@@ -24,7 +34,8 @@
     color: #fff;
   }
 
-  p {
+  &__paragraph {
+    max-width: 460px;
     margin: 0 0 100px 0;
     padding: 0;
     font-family: Inter;
@@ -32,11 +43,19 @@
     font-weight: 400;
     line-height: 20px;
     letter-spacing: -0.04em;
+    text-align: center;
     color: #fff;
+
+    @media (max-width: 768px) {
+      margin-bottom: 83px;
+      font-size: 12px;
+      line-height: 18px;
+    }
   }
 
-  ul {
-    margin-bottom: 100px;
+  &__list {
+    margin: 0 0 100px 0;
+    padding: 0;
     list-style: none;
     display: flex;
 
@@ -50,6 +69,11 @@
       border-radius: 10px;
       cursor: default;
 
+      @media (max-width: 768px) {
+        min-width: 84px;
+        height: 57px;
+      }
+
       span {
         font-family: Inter;
         font-size: 14px;
@@ -57,6 +81,11 @@
         line-height: 17px;
         letter-spacing: -0.04em;
         color: #fff;
+
+        @media (max-width: 768px) {
+          font-size: 12px;
+          line-height: 14.52px;
+        }
       }
 
       &:not(:last-child) {

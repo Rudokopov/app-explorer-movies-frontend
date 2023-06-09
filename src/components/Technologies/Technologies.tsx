@@ -7,12 +7,12 @@ const Technologies: React.FC = () => {
     <div className={styles.container}>
       <h2 className={`${sharedStyles.title} ${styles.title}`}>Технологии</h2>
       <div className={styles.content}>
-        <h3>7 технологий</h3>
-        <p>
+        <h3 className={styles.content__title}>7 технологий</h3>
+        <p className={styles.content__paragraph}>
           На курсе веб-разработки мы освоили технологии, которые применили в
           дипломном проекте.
         </p>
-        <ul>
+        <ul className={styles.content__list}>
           <li>
             <span>HTML</span>
           </li>
