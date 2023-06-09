@@ -3,6 +3,11 @@
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
+
+  @media (max-width: 768px) {
+    height: 100%;
+    justify-content: center;
+  }
 }
 
 .title {
@@ -13,6 +18,10 @@
   font-weight: 500;
   line-height: 29px;
   color: #fff;
+
+  @media (max-width: 768px) {
+    margin-top: 0;
+  }
 }
 
 .list {

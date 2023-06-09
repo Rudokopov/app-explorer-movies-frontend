@@ -14,12 +14,17 @@
     background-color: #2f2f2f;
     padding: 15px 0 15px 22px;
     border-radius: 4px;
-    width: 1060px;
+    max-width: 1060px;
+    width: calc(100vw - 220px);
     font-family: Inter;
     font-size: 14px;
     font-weight: 400;
     line-height: 18px;
     color: #8b8b8b;
+
+    @media (max-width: 768px) {
+      width: calc(100vw - 164px);
+    }
 
     &:focus {
       border: 1px solid #fff;

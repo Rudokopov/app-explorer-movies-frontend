@@ -3,10 +3,10 @@ import logo from "../../images/logo.svg";
 import styles from "./submitform.module.scss";
 
 type UserFormProps = {
-  title: string;
+  title: "Добро пожаловать!" | "Рады видеть!";
   submitOption: () => void;
-  btnTitle: string;
-  formType: string;
+  btnTitle: "Зарегестрироваться" | "Войти";
+  formType: "auth" | "reg";
 };
 
 const UserForm: React.FC<UserFormProps> = (props) => {
