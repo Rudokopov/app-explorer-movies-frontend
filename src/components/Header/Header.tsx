@@ -6,7 +6,7 @@ import burgerIcon from "../../images/burger.svg";
 import BurgerMenu from "../BurgerMenu";
 
 const Header: React.FC = () => {
-  const [isLoggin, setLoggin] = useState(false);
+  const [isLoggin, setLoggin] = useState(true);
   const [isMobile, setMobile] = useState(true);
   const [isMenuOpen, setMenuOpen] = useState(false);
 

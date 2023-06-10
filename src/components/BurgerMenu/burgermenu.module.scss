@@ -10,6 +10,10 @@
   background-color: #202020;
   transition: transform 0.3s ease-in-out;
   transform: translateX(100%);
+
+  @media (max-width: 550px) {
+    width: 320px;
+  }
 }
 
 .open {
@@ -61,5 +65,9 @@
   img {
     margin-bottom: 90px;
     align-self: flex-end;
+
+    @media (max-width: 550px) {
+      margin-bottom: 46px;
+    }
   }
 }
