@@ -1,12 +1,18 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import logo from "../../images/logo.svg";
 import styles from "./header.module.scss";
 import profileLogo from "../../images/profile-logo.png";
 import burgerIcon from "../../images/burger.svg";
+import BurgerMenu from "../BurgerMenu";
 
 const Header: React.FC = () => {
   const [isLoggin, setLoggin] = useState(false);
   const [isMobile, setMobile] = useState(true);
+  const [isMenuOpen, setMenuOpen] = useState(false);
+
+  const toggleMobileMenu = () => {
+    setMenuOpen(!isMenuOpen);
+  };
 
   useEffect(() => {
     const handleResize = () => {
@@ -32,9 +38,12 @@ const Header: React.FC = () => {
 
           <ul className={styles.content}>
             {isMobile ? (
-              <li>
-                <img src={burgerIcon} />
-              </li>
+              <>
+                <li>
+                  <img src={burgerIcon} onClick={toggleMobileMenu} />
+                </li>
+                <BurgerMenu closeMenu={toggleMobileMenu} isOpen={isMenuOpen} />
+              </>
             ) : (
               <>
                 <li>
