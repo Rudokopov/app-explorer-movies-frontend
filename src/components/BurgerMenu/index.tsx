@@ -7,15 +7,19 @@ import { Link, useLocation } from "react-router-dom";
 type BurgerMenuProps = {
   isOpen: boolean;
   closeMenu: () => void;
+  menuRef: any;
 };
 
 const BurgerMenu: React.FC<BurgerMenuProps> = (props) => {
   const location = useLocation();
   const currentPath = location.pathname;
-  const { isOpen, closeMenu } = props;
+  const { isOpen, closeMenu, menuRef } = props;
 
   return (
-    <div className={`${styles.burgerMenu} ${isOpen ? styles.open : ""}`}>
+    <div
+      ref={menuRef}
+      className={`${styles.burgerMenu} ${isOpen ? styles.open : ""}`}
+    >
       <img
         className={styles.burgerIcon}
         src={closeBtnIcon}

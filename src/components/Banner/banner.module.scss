@@ -11,6 +11,11 @@
     margin-left: 20px;
     margin-right: 20px;
   }
+
+  @media (max-width: 550px) {
+    margin-left: 14px;
+    margin-right: 14px;
+  }
 }
 
 .title {
@@ -29,18 +34,37 @@
     font-size: 40px;
     line-height: 52px;
     margin-top: 350px;
-    margin-bottom: 314px;
+  }
+
+  @media (max-width: 550px) {
+    max-width: 292px;
+    margin-top: 220px;
+    font-size: 29px;
+    line-height: 37px;
   }
 }
 
 .content {
   margin: 150px 0 30px 0;
+  padding: 0;
   list-style: none;
   display: flex;
+
+  @media (max-width: 768px) {
+    margin-top: 314px;
+  }
+
+  @media (max-width: 550px) {
+    margin-top: 212px;
+  }
 
   li {
     &:not(:last-child) {
       margin-right: 10px;
+
+      @media (max-width: 550px) {
+        margin-right: 6px;
+      }
     }
 
     button {
@@ -54,6 +78,11 @@
       font-size: 12px;
       font-weight: 500;
       line-height: 16px;
+
+      @media (max-width: 550px) {
+        padding: 5px 15px;
+        font-size: 10px;
+      }
 
       &:focus {
         border: 1px solid #fff;

@@ -4,7 +4,7 @@ import styles from "./technologies.module.scss";
 
 const Technologies: React.FC = () => {
   return (
-    <div className={styles.container}>
+    <section className={styles.container}>
       <h2 className={`${sharedStyles.title} ${styles.title}`}>Технологии</h2>
       <div className={styles.content}>
         <h3 className={styles.content__title}>7 технологий</h3>
@@ -36,7 +36,7 @@ const Technologies: React.FC = () => {
           </li>
         </ul>
       </div>
-    </div>
+    </section>
   );
 };
 

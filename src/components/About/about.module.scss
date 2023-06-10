@@ -1,13 +1,17 @@
 .container {
-  margin: 0 70px;
+  margin: 110px 70px 0 70px;
 
   @media (max-width: 768px) {
-    margin: 0 50px;
+    margin: 90px 50px 0 50px;
+  }
+
+  @media (max-width: 550px) {
+    margin: 70px 18px 0 18px;
   }
 }
 
 .title {
-  margin: 110px 0 70px 0;
+  margin: 0 0 70px 0;
   padding: 0 0 23px 0;
   font-family: Inter;
   font-size: 22px;
@@ -16,6 +20,12 @@
   letter-spacing: -0.04em;
   color: #ffffff;
   border-bottom: 1px solid #dadada;
+
+  @media (max-width: 550px) {
+    font-size: 18px;
+    line-height: 22px;
+    margin-bottom: 60px;
+  }
 }
 
 .list {
@@ -29,9 +39,19 @@
     padding: 0;
     color: #ffffff;
 
+    @media (max-width: 550px) {
+      flex-wrap: wrap;
+      margin-bottom: 60px;
+    }
+
     li {
       &:not(:last-child) {
         margin-right: 40px;
+
+        @media (max-width: 550px) {
+          margin-right: 0;
+          margin-bottom: 56px;
+        }
       }
     }
 
@@ -43,6 +63,12 @@
       font-weight: 400;
       line-height: 24px;
       letter-spacing: -0.04em;
+
+      @media (max-width: 550px) {
+        font-size: 18px;
+        line-height: 22px;
+        margin-bottom: 16px;
+      }
     }
 
     p {
@@ -57,11 +83,20 @@
         font-size: 12px;
         line-height: 18px;
       }
+
+      @media (max-width: 550px) {
+        font-size: 11px;
+        line-height: 16px;
+      }
     }
   }
 
   &__progress {
     margin-bottom: 110px;
+
+    @media (max-width: 550px) {
+      margin-bottom: 70px;
+    }
     h4 {
       margin: 0;
       padding: 0;
@@ -70,6 +105,11 @@
       font-weight: 400;
       line-height: 17px;
       text-align: center;
+
+      @media (max-width: 550px) {
+        font-size: 11px;
+        line-height: 13px;
+      }
     }
 
     p {
@@ -81,15 +121,25 @@
       line-height: 17px;
       text-align: center;
       color: #8b8b8b;
+
+      @media (max-width: 550px) {
+        font-size: 11px;
+        line-height: 13px;
+      }
     }
     .active_item {
+      min-width: 100px;
       width: 228px;
-      height: 36px;
+      height: 35px;
       background-color: #3ddc84;
 
       h4 {
         padding: 9px 14px;
         color: #000;
+
+        @media (max-width: 550px) {
+          padding: 11px 10px;
+        }
       }
     }
     .default_item {
@@ -100,6 +150,10 @@
         padding: 9px 0;
         background-color: #303030;
         color: #fff;
+
+        @media (max-width: 550px) {
+          padding: 11px 0;
+        }
       }
     }
   }
