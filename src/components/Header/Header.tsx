@@ -4,6 +4,7 @@ import styles from "./header.module.scss";
 import profileLogo from "../../images/profile-logo.png";
 import burgerIcon from "../../images/burger.svg";
 import BurgerMenu from "../BurgerMenu";
+import { Link } from "react-router-dom";
 
 const Header: React.FC = () => {
   const [isLoggin, setLoggin] = useState(true);

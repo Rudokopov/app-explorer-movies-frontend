@@ -1,6 +1,7 @@
 import React from "react";
 import logo from "../../images/logo.svg";
 import styles from "./submitform.module.scss";
+import { Link } from "react-router-dom";
 
 type UserFormProps = {
   title: "Добро пожаловать!" | "Рады видеть!";
@@ -18,7 +19,7 @@ const UserForm: React.FC<UserFormProps> = (props) => {
         <h2 className={styles.title}>{title}</h2>
         <form onSubmit={submitOption} className={styles.form}>
           <fieldset className={styles.form__container}>
-            {formType === "auth" && (
+            {formType === "reg" && (
               <>
                 <label className={styles.form__label} htmlFor="name">
                   Имя
@@ -32,7 +33,6 @@ const UserForm: React.FC<UserFormProps> = (props) => {
                 />
               </>
             )}
-
             <label className={styles.form__label} htmlFor="email">
               Email
             </label>
@@ -64,15 +64,21 @@ const UserForm: React.FC<UserFormProps> = (props) => {
           {formType === "auth" ? (
             <>
               <p className={styles.tools__paragraph}>
-                Уже зарегестрированы?
-                <span className={styles.tools__paragraph_link}>Войти</span>
+                Ещё не зарегистрированы?
+                <Link to="/signup" className={styles.tools__paragraph_link}>
+                  Регистрация
+                </Link>
               </p>
             </>
           ) : (
-            <p className={styles.tools__paragraph}>
-              Ещё не зарегистрированы?
-              <span className={styles.tools__paragraph_link}>Регистрация</span>
-            </p>
+            <>
+              <p className={styles.tools__paragraph}>
+                Уже зарегестрированы?
+                <Link to="/signin" className={styles.tools__paragraph_link}>
+                  Войти
+                </Link>
+              </p>
+            </>
           )}
         </div>
       </div>

@@ -5,6 +5,10 @@
   justify-content: center;
   align-items: center;
   border-bottom: 1px solid #424242;
+
+  @media (max-width: 550px) {
+    margin-bottom: 40px;
+  }
 }
 
 .form {
@@ -48,6 +52,10 @@
 
     color: #fff;
     background-color: #4285f4;
+
+    @media (max-width: 550px) {
+      height: 48px;
+    }
 
     &:focus {
       border: 1px solid #fff;

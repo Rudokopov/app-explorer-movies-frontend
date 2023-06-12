@@ -11,11 +11,20 @@
     margin-right: 30px;
     margin-left: 30px;
   }
+
+  @media (max-width: 550px) {
+    margin-right: 14px;
+    margin-left: 14px;
+  }
 }
 
 .button__container {
   display: flex;
   justify-content: center;
+
+  @media (max-width: 550px) {
+    margin-bottom: 79px;
+  }
 
   button {
     all: unset;
@@ -31,6 +40,10 @@
     line-height: 15px;
     cursor: pointer;
     text-align: center;
+
+    @media (max-width: 550px) {
+      width: 240px;
+    }
 
     &:focus {
       border: 1px solid #fff;

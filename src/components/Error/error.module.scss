@@ -26,7 +26,7 @@
 
 .button {
   all: unset;
-  margin-top: 184px;
+
   cursor: pointer;
   font-family: Inter;
   font-size: 14px;
@@ -34,4 +34,26 @@
   line-height: 17px;
   text-align: center;
   color: #4285f4;
+  transform: translate(0, 184px);
+  transition: opacity 0.5s ease;
+
+  &_link {
+    all: unset;
+    transition: opacity 0.5s ease;
+    &:focus {
+      border: 1px solid #fff;
+    }
+    &:hover {
+      opacity: 0.5;
+    }
+  }
+
+  @media (max-width: 768px) {
+    margin-top: 0;
+    transform: translate(0, 158px);
+  }
+
+  @media (max-width: 550px) {
+    transform: translate(0, 284px);
+  }
 }
