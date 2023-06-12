@@ -1,5 +1,9 @@
 # app-explorer-movies-frontend
 
+## Ссылка на макет
+
+https://drive.google.com/file/d/1pz_49SBWQxA_NCbsmSJWv937jMgBaQSI/view?usp=sharing
+
 ### Инструкция
 
 ---
