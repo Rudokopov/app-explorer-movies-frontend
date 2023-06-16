@@ -34,7 +34,7 @@
   list-style: none;
   display: flex;
 
-  &__info {
+  &Info {
     margin: 0 0 110px 0;
     padding: 0;
     color: #ffffff;
@@ -44,7 +44,7 @@
       margin-bottom: 60px;
     }
 
-    li {
+    &Item {
       &:not(:last-child) {
         margin-right: 40px;
 
@@ -55,7 +55,7 @@
       }
     }
 
-    h3 {
+    &itemTitle {
       margin: 0 0 26px 0;
       padding: 0;
       font-family: Inter;
@@ -71,7 +71,7 @@
       }
     }
 
-    p {
+    &itemDescription {
       margin: 0;
       padding: 0;
       font-family: Inter;
@@ -91,13 +91,13 @@
     }
   }
 
-  &__progress {
+  &Progress {
     margin-bottom: 110px;
 
     @media (max-width: 550px) {
       margin-bottom: 70px;
     }
-    h4 {
+    &Title {
       margin: 0;
       padding: 0;
       font-family: Inter;
@@ -112,7 +112,7 @@
       }
     }
 
-    p {
+    &Description {
       margin: 14px 0 0 0;
       padding: 0;
       font-family: Inter;
@@ -127,13 +127,13 @@
         line-height: 13px;
       }
     }
-    .active_item {
+    &_active {
       min-width: 100px;
       width: 228px;
       height: 35px;
       background-color: #3ddc84;
 
-      h4 {
+      &Title {
         padding: 9px 14px;
         color: #000;
 
@@ -142,11 +142,11 @@
         }
       }
     }
-    .default_item {
+    &_default {
       width: 912px;
       height: 36px;
 
-      h4 {
+      &Title {
         padding: 9px 0;
         background-color: #303030;
         color: #fff;

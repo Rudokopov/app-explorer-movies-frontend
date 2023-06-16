@@ -24,6 +24,7 @@ const BurgerMenu: React.FC<BurgerMenuProps> = (props) => {
         className={styles.burgerIcon}
         src={closeBtnIcon}
         onClick={closeMenu}
+        alt="Закрыть"
       />
       <div className={styles.menuLinks}>
         <Link className={currentPath === "/" ? styles.active : ""} to="/">

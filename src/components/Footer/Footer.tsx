@@ -3,24 +3,30 @@ import styles from "./footer.module.scss";
 
 const Footer: React.FC = () => {
   return (
-    <section className={styles.container}>
+    <footer className={styles.container}>
       <p className={styles.paragraph}>
         Учебный проект Яндекс.Практикум х BeatFilm.
       </p>
       <div className={styles.content}>
         <div>
-          <span>&copy; {new Date().getFullYear()}</span>
+          <span className={styles.contentSpan}>
+            &copy; {new Date().getFullYear()}
+          </span>
         </div>
-        <ul className={styles.content__list}>
-          <li>
-            <a href="#">Яндекс.Практикум</a>
+        <ul className={styles.contentList}>
+          <li className={styles.contentListItem}>
+            <a className={styles.link} href="/">
+              Яндекс.Практикум
+            </a>
           </li>
-          <li>
-            <a href="#">Github</a>
+          <li className={styles.contentListItem}>
+            <a className={styles.link} href="https://github.com/Rudokopov">
+              Github
+            </a>
           </li>
         </ul>
       </div>
-    </section>
+    </footer>
   );
 };
 

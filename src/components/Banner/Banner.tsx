@@ -7,15 +7,21 @@ const Banner: React.FC = () => {
       <h1 className={styles.title}>
         Учебный проект студента факультета Веб-разработки.
       </h1>
-      <ul className={styles.content}>
-        <li>
-          <button type="button">О проекте</button>
+      <ul className={styles.list}>
+        <li className={styles.listItem}>
+          <button className={styles.button} type="button">
+            О проекте
+          </button>
         </li>
-        <li>
-          <button type="button">Технологии</button>
+        <li className={styles.listItem}>
+          <button className={styles.button} type="button">
+            Технологии
+          </button>
         </li>
-        <li>
-          <button type="button">Студент</button>
+        <li className={styles.listItem}>
+          <button className={styles.button} type="button">
+            Студент
+          </button>
         </li>
       </ul>
     </section>

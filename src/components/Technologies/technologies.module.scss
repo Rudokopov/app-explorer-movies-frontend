@@ -30,7 +30,7 @@
   justify-content: center;
   align-items: center;
 
-  &__title {
+  &Title {
     margin: 90px 0 26px 0;
     padding: 0;
     font-family: Inter;
@@ -52,7 +52,7 @@
     }
   }
 
-  &__paragraph {
+  &Paragraph {
     max-width: 460px;
     margin: 0 0 100px 0;
     padding: 0;
@@ -77,20 +77,20 @@
     }
   }
 
-  &__list {
+  &List {
     margin: 0 0 100px 0;
     padding: 0;
     list-style: none;
     display: flex;
 
-    @media (max-width: 656px) {
+    @media (max-width: 670px) {
       display: grid;
       grid-template-columns: repeat(2, minmax(84px, 84px));
       column-gap: 10px;
       margin-bottom: 70px;
     }
 
-    li {
+    &Item {
       display: flex;
       align-items: center;
       justify-content: center;
@@ -109,7 +109,7 @@
         margin-bottom: 10px;
       }
 
-      span {
+      &Span {
         font-family: Inter;
         font-size: 14px;
         font-weight: 400;

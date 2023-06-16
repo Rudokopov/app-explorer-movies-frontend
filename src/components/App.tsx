@@ -19,7 +19,7 @@ const App: React.FC = () => {
   const registration = () => {};
 
   return (
-    <div className={styles.container}>
+    <main className={styles.container}>
       <Routes>
         <Route path="/" element={<Main />} />
         <Route path="/me" element={<UserPage />} />
@@ -60,7 +60,7 @@ const App: React.FC = () => {
         />
         <Route path="*" element={<Error />} />
       </Routes>
-    </div>
+    </main>
   );
 };
 

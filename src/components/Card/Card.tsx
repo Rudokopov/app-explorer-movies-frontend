@@ -15,7 +15,7 @@ const Card: React.FC<CardProps> = (props) => {
     <div className={styles.container}>
       <img className={styles.image} src={image} alt="Картинка фильма" />
       <div className={styles.content}>
-        <h3>{title}</h3>
+        <h3 className={styles.title}>{title}</h3>
         {!myFilmsPage ? (
           <svg
             className={isSave ? `${styles.active}` : ""}
@@ -88,7 +88,7 @@ const Card: React.FC<CardProps> = (props) => {
           </svg>
         )}
       </div>
-      <p>{duration}</p>
+      <p className={styles.description}>{duration}</p>
     </div>
   );
 };

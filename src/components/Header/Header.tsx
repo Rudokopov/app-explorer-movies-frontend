@@ -4,7 +4,6 @@ import styles from "./header.module.scss";
 import profileLogo from "../../images/profile-logo.png";
 import burgerIcon from "../../images/burger.svg";
 import BurgerMenu from "../BurgerMenu";
-import { Link } from "react-router-dom";
 
 const Header: React.FC = () => {
   const [isLoggin, setLoggin] = useState(true);
@@ -50,20 +49,20 @@ const Header: React.FC = () => {
   }, []);
 
   return (
-    <section className={styles.container}>
+    <header className={styles.container}>
       {!isLoggin ? (
         <>
-          <a>
+          <a className={styles.link} href="/">
             <img src={logo} alt="logo" />
           </a>
-          <ul className={styles.content}>
+          <ul className={styles.list}>
             <>
-              <li>
+              <li className={styles.listItem}>
                 <button className={styles.button} type="button">
                   Регистрация
                 </button>
               </li>
-              <li>
+              <li className={styles.listItem}>
                 <button
                   className={`${styles.button} ${styles.dedicated}`}
                   type="button"
@@ -78,33 +77,35 @@ const Header: React.FC = () => {
         <>
           {isMobile ? (
             <>
-              <a>
+              <a className={styles.link} href="/">
                 <img src={logo} alt="logo" />
               </a>
-              <li>
-                <button
-                  ref={menuButtonRef}
-                  className={styles.burgerButton}
-                  type="button"
-                >
-                  <img
-                    src={burgerIcon}
-                    alt="Иконка мобильного меню"
-                    onClick={toggleMobileMenu}
-                  />
-                </button>
-              </li>
-              <BurgerMenu
-                menuRef={menuRef}
-                closeMenu={toggleMobileMenu}
-                isOpen={isMenuOpen}
-              />
+              <ul className={`${styles.list}`}>
+                <li className={styles.listItem}>
+                  <button
+                    ref={menuButtonRef}
+                    className={styles.burgerButton}
+                    type="button"
+                  >
+                    <img
+                      src={burgerIcon}
+                      alt="Иконка мобильного меню"
+                      onClick={toggleMobileMenu}
+                    />
+                  </button>
+                </li>
+                <BurgerMenu
+                  menuRef={menuRef}
+                  closeMenu={toggleMobileMenu}
+                  isOpen={isMenuOpen}
+                />
+              </ul>
             </>
           ) : (
             <>
-              <ul className={`${styles.content}`}>
-                <li>
-                  <a href="#">
+              <ul className={`${styles.list}`}>
+                <li className={styles.listItem}>
+                  <a href="/">
                     <img src={logo} alt="logo" />
                   </a>
                 </li>
@@ -122,8 +123,8 @@ const Header: React.FC = () => {
                   </button>
                 </li>
               </ul>
-              <ul className={styles.content}>
-                <li>
+              <ul className={styles.list}>
+                <li className={styles.listItem}>
                   <button className={styles.button} type="button">
                     <img src={profileLogo} alt="Иконка профиля" />
                   </button>
@@ -133,7 +134,7 @@ const Header: React.FC = () => {
           )}
         </>
       )}
-    </section>
+    </header>
   );
 };
 

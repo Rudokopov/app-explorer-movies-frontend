@@ -24,8 +24,10 @@ const Cards: React.FC = () => {
           />
         ))}
       </div>
-      <div className={styles.button__container}>
-        <button>Ещё</button>
+      <div className={styles.buttonContainer}>
+        <button type="button" className={styles.buttonContainerButton}>
+          Ещё
+        </button>
       </div>
     </>
   );

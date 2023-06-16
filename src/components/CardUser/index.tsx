@@ -24,11 +24,13 @@ const CardUser: React.FC = () => {
         ))}
       </div>
       <div
-        className={`${sharedStyles.button__container} ${
+        className={`${sharedStyles.buttonContainer} ${
           showButton ? "" : sharedStyles.hidden
         }`}
       >
-        <button>Ещё</button>
+        <button type="button" className={sharedStyles.buttonContainerButton}>
+          Ещё
+        </button>
       </div>
     </>
   );

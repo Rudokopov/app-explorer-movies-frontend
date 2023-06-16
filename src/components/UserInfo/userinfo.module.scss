@@ -32,7 +32,7 @@
     width: 260px;
   }
 
-  &__item {
+  &Item {
     display: flex;
     justify-content: space-between;
     &:first-child {
@@ -44,7 +44,7 @@
     }
   }
 
-  &__paragraph {
+  &Paragraph {
     margin: 0;
     padding: 0;
     font-family: Inter;

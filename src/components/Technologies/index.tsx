@@ -7,32 +7,32 @@ const Technologies: React.FC = () => {
     <section className={styles.container}>
       <h2 className={`${sharedStyles.title} ${styles.title}`}>Технологии</h2>
       <div className={styles.content}>
-        <h3 className={styles.content__title}>7 технологий</h3>
-        <p className={styles.content__paragraph}>
+        <h3 className={styles.contentTitle}>7 технологий</h3>
+        <p className={styles.contentParagraph}>
           На курсе веб-разработки мы освоили технологии, которые применили в
           дипломном проекте.
         </p>
-        <ul className={styles.content__list}>
-          <li>
-            <span>HTML</span>
+        <ul className={styles.contentList}>
+          <li className={styles.contentListItem}>
+            <span className={styles.contentListItemSpan}>HTML</span>
           </li>
-          <li>
-            <span>CSS</span>
+          <li className={styles.contentListItem}>
+            <span className={styles.contentListItemSpan}>CSS</span>
           </li>
-          <li>
-            <span>JS</span>
+          <li className={styles.contentListItem}>
+            <span className={styles.contentListItemSpan}>JS</span>
           </li>
-          <li>
-            <span>React</span>
+          <li className={styles.contentListItem}>
+            <span className={styles.contentListItemSpan}>React</span>
           </li>
-          <li>
-            <span>Git</span>
+          <li className={styles.contentListItem}>
+            <span className={styles.contentListItemSpan}>Git</span>
           </li>
-          <li>
-            <span>Express.js</span>
+          <li className={styles.contentListItem}>
+            <span className={styles.contentListItemSpan}>Express.js</span>
           </li>
-          <li>
-            <span>mongoDB</span>
+          <li className={styles.contentListItem}>
+            <span className={styles.contentListItemSpan}>mongoDB</span>
           </li>
         </ul>
       </div>

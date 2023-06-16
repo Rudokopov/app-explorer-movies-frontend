@@ -12,13 +12,13 @@ const UserInfo: React.FC<UserInfoProps> = (props) => {
     <div className={styles.container}>
       <h2 className={styles.title}>Привет, {title}</h2>
       <ul className={styles.list}>
-        <li className={styles.list__item}>
-          <p className={styles.list__paragraph}>Имя</p>
-          <p className={styles.list__paragraph}>{title}</p>
+        <li className={styles.listItem}>
+          <p className={styles.listParagraph}>Имя</p>
+          <p className={styles.listParagraph}>{title}</p>
         </li>
-        <li className={styles.list__item}>
-          <p className={styles.list__paragraph}>E-mail</p>
-          <p className={styles.list__paragraph}>{email}</p>
+        <li className={styles.listItem}>
+          <p className={styles.listParagraph}>E-mail</p>
+          <p className={styles.listParagraph}>{email}</p>
         </li>
       </ul>
       <div className={styles.tools}>
