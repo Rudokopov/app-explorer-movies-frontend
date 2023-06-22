@@ -4,6 +4,7 @@ import styles from "./header.module.scss";
 import profileLogo from "../../images/profile-logo.png";
 import burgerIcon from "../../images/burger.svg";
 import BurgerMenu from "../BurgerMenu";
+import { Link } from "react-router-dom";
 
 const Header: React.FC = () => {
   const [isLoggin, setLoggin] = useState(true);
@@ -116,10 +117,14 @@ const Header: React.FC = () => {
                     }`}
                     type="button"
                   >
-                    Фильмы
+                    <Link className={styles.buttonLink} to="/films">
+                      Фильмы
+                    </Link>
                   </button>
                   <button className={styles.button} type="button">
-                    Сохраненный фильмы
+                    <Link className={styles.buttonLink} to="/films/saved">
+                      Сохраненные фильмы
+                    </Link>
                   </button>
                 </li>
               </ul>
