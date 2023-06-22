@@ -2,6 +2,9 @@ import React from "react";
 import Card from "../Card/Card";
 import data from "../../cards.json";
 import styles from "./cards.module.scss";
+import { useSelector } from "react-redux";
+import { selectFilterData } from "../../app/filters/selectors";
+import { Film } from "../../app/films/types";
 
 export type CardData = {
   image: string;
@@ -11,18 +14,24 @@ export type CardData = {
 };
 
 const Cards: React.FC = () => {
+  const { resultFilms } = useSelector(selectFilterData);
   return (
     <>
       <div className={styles.container}>
-        {data.map((card: CardData, i: number) => (
-          <Card
-            title={card.title}
-            image={card.image}
-            duration={card.duration}
-            isSave={card.isSave}
-            key={i}
-          />
-        ))}
+        {resultFilms ? (
+          resultFilms.map((card: Film, i: number) => {
+            return (
+              <Card
+                title={card.nameRU}
+                image={`https://api.nomoreparties.co/${card.image.url}`}
+                duration={card.duration}
+                key={i}
+              />
+            );
+          })
+        ) : (
+          <h1>Начните искать</h1>
+        )}
       </div>
       <div className={styles.buttonContainer}>
         <button type="button" className={styles.buttonContainerButton}>

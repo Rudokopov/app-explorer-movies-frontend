@@ -3,7 +3,7 @@ import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { FilmSliceState, Film, Status } from "./types";
 
 const initialState: FilmSliceState = {
-  items: [],
+  films: [],
   status: Status.LOADING,
 };
 
@@ -21,25 +21,25 @@ const filmSlice = createSlice({
   name: "film",
   initialState,
   reducers: {
-    setItems(state, action: PayloadAction<Film[]>) {
-      state.items = action.payload;
+    setFilms(state, action: PayloadAction<Film[]>) {
+      state.films = action.payload;
     },
   },
 
   extraReducers: (builder) => {
     builder.addCase(fetchFilms.pending, (state) => {
-      state.items = [];
+      state.films = [];
       state.status = Status.LOADING;
     });
     builder.addCase(fetchFilms.fulfilled, (state, action) => {
-      state.items = action.payload;
+      state.films = action.payload;
       state.status = Status.SUCCESS;
     });
     builder.addCase(fetchFilms.rejected, (state) => {
       state.status = Status.ERROR;
-      state.items = [];
+      state.films = [];
     });
   },
 });
-export const { setItems } = filmSlice.actions;
+export const { setFilms } = filmSlice.actions;
 export default filmSlice.reducer;

@@ -1,10 +1,12 @@
 export type Film = {
   id: string;
-  nameRu: string;
+  nameRU: string;
   description: string;
   duration: number;
   trailerLink: string;
-  image: {};
+  image: {
+    url: string;
+  };
 };
 
 export enum Status {
@@ -14,6 +16,6 @@ export enum Status {
 }
 
 export type FilmSliceState = {
-  items: Film[];
+  films: Film[];
   status: Status.LOADING | Status.SUCCESS | Status.ERROR;
 };

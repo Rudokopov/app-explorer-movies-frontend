@@ -17,7 +17,7 @@ const CardUser: React.FC = () => {
             title={card.title}
             image={card.image}
             duration={card.duration}
-            isSave={card.isSave}
+            // isSave={card.isSave}
             myFilmsPage={true}
             key={i}
           />

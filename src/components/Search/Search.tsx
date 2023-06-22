@@ -1,6 +1,15 @@
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import styles from "./search.module.scss";
-import { styled, Switch } from "@mui/material";
+import { debounce, styled, Switch } from "@mui/material";
+import { useAppDispatch } from "../../app/store";
+import {
+  clearResultFilms,
+  setResultFilms,
+  setSearchValue,
+  setShortType,
+} from "../../app/filters/slice";
+import { fetchFilms } from "../../app/films/slice";
+import { Film } from "../../app/films/types";
 
 const CustomSwitch = styled(Switch)(({ theme }) => ({
   width: 36,
@@ -38,17 +47,70 @@ const CustomSwitch = styled(Switch)(({ theme }) => ({
 }));
 
 const Search: React.FC = () => {
+  const dispatch = useAppDispatch();
   const [short, setShort] = useState(false);
+  const [value, setValue] = useState<string>("");
+
+  useEffect(() => {
+    dispatch(setShortType(short));
+  }, [short]);
+
+  const updateSearchValue = useCallback(
+    debounce((str: string) => {
+      dispatch(setSearchValue(str));
+    }, 500),
+    []
+  ); // Сделал что бы снять лишнюю нагрузку на апдейт редакса и в дальнейшем если логику придется прикрутить к поиску на сервере, не спамилось слишком много запросов
+
+  const onChangeInput = (evt: React.ChangeEvent<HTMLInputElement>) => {
+    setValue(evt.target.value);
+    updateSearchValue(evt.target.value);
+  };
 
   const handleShortParam = () => {
     short ? setShort(false) : setShort(true);
   };
 
-  console.log(short);
+  const getFilms = useCallback(async () => {
+    try {
+      const films = await dispatch(fetchFilms());
+      const result = films.payload as Film[];
+      return result;
+    } catch (err: any) {
+      alert(`Произошла ошибка при получении фильмов ${err.message}`);
+    }
+  }, []);
+
+  const filterFilms = (filmData: Film[] | undefined) => {
+    try {
+      if (filmData) {
+        const filteredFilms = filmData.filter((film: Film) =>
+          film.nameRU.toLowerCase().includes(value.toLowerCase())
+        );
+        dispatch(setResultFilms(filteredFilms));
+      }
+    } catch (err: any) {
+      alert(`Произошла ошибка при поиске фильмов ${err.message}`);
+    }
+  };
+
+  const onSubmit = async (evt: React.FormEvent) => {
+    evt.preventDefault();
+    dispatch(clearResultFilms()); // Чищу предыдущий результат
+    const res = await getFilms();
+    filterFilms(res);
+  };
+
   return (
     <section className={styles.container}>
-      <form className={styles.form} action="submit">
-        <input className={styles.formInput} placeholder="Фильмы" type="text" />
+      <form onSubmit={onSubmit} className={styles.form} action="submit">
+        <input
+          value={value}
+          onChange={(evt) => onChangeInput(evt)}
+          className={styles.formInput}
+          placeholder="Фильмы"
+          type="text"
+        />
         <button className={styles.button} type="submit">
           Найти
         </button>

@@ -4,13 +4,13 @@ import styles from "./card.module.scss";
 type CardProps = {
   image: string;
   title: string;
-  isSave: boolean;
+  // isSave: boolean;
   duration: number;
   myFilmsPage?: boolean;
 };
 
 const Card: React.FC<CardProps> = (props) => {
-  const { image, title, isSave, duration, myFilmsPage } = props;
+  const { image, title, duration, myFilmsPage } = props;
   return (
     <div className={styles.container}>
       <img className={styles.image} src={image} alt="Картинка фильма" />
@@ -18,7 +18,7 @@ const Card: React.FC<CardProps> = (props) => {
         <h3 className={styles.title}>{title}</h3>
         {!myFilmsPage ? (
           <svg
-            className={isSave ? `${styles.active}` : ""}
+            // className={isSave ? `${styles.active}` : ""}
             width="28"
             height="28"
             viewBox="0 0 28 28"

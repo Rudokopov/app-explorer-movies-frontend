@@ -12,7 +12,7 @@ const filterSlice = createSlice({
   name: "filter",
   initialState,
   reducers: {
-    setItems(state, action: PayloadAction<Film[]>) {
+    setResultFilms(state, action: PayloadAction<Film[]>) {
       state.resultFilms = action.payload;
     },
     setSearchValue(state, action: PayloadAction<string>) {
@@ -21,8 +21,16 @@ const filterSlice = createSlice({
     setShortType(state, action: PayloadAction<boolean>) {
       state.isShort = action.payload;
     },
+    clearResultFilms(state) {
+      state.resultFilms = [];
+    },
   },
 });
 
-export const { setItems, setSearchValue, setShortType } = filterSlice.actions;
+export const {
+  setResultFilms,
+  setSearchValue,
+  setShortType,
+  clearResultFilms,
+} = filterSlice.actions;
 export default filterSlice.reducer;
