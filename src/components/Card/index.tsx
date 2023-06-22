@@ -5,7 +5,7 @@ type CardProps = {
   image: string;
   title: string;
   // isSave: boolean;
-  duration: number;
+  duration: string;
   myFilmsPage?: boolean;
 };
 

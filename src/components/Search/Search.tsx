@@ -10,6 +10,8 @@ import {
 } from "../../app/filters/slice";
 import { fetchFilms } from "../../app/films/slice";
 import { Film } from "../../app/films/types";
+import { useSelector } from "react-redux";
+import { selectFilterData } from "../../app/filters/selectors";
 
 const CustomSwitch = styled(Switch)(({ theme }) => ({
   width: 36,
@@ -48,8 +50,9 @@ const CustomSwitch = styled(Switch)(({ theme }) => ({
 
 const Search: React.FC = () => {
   const dispatch = useAppDispatch();
-  const [short, setShort] = useState(false);
-  const [value, setValue] = useState<string>("");
+  const { searchValue, isShort } = useSelector(selectFilterData);
+  const [short, setShort] = useState(isShort || false);
+  const [value, setValue] = useState<string>(searchValue || "");
 
   useEffect(() => {
     dispatch(setShortType(short));
@@ -58,7 +61,7 @@ const Search: React.FC = () => {
   const updateSearchValue = useCallback(
     debounce((str: string) => {
       dispatch(setSearchValue(str));
-    }, 500),
+    }, 800),
     []
   ); // Сделал что бы снять лишнюю нагрузку на апдейт редакса и в дальнейшем если логику придется прикрутить к поиску на сервере, не спамилось слишком много запросов
 
@@ -84,9 +87,18 @@ const Search: React.FC = () => {
   const filterFilms = (filmData: Film[] | undefined) => {
     try {
       if (filmData) {
-        const filteredFilms = filmData.filter((film: Film) =>
-          film.nameRU.toLowerCase().includes(value.toLowerCase())
-        );
+        const filteredFilms = filmData.filter((film: Film) => {
+          const isMatch = film.nameRU
+            .toLowerCase()
+            .includes(value.toLowerCase());
+          const hasValidDuration = film.duration > 40;
+
+          if (short) {
+            return isMatch && !hasValidDuration;
+          } else {
+            return isMatch;
+          }
+        });
         dispatch(setResultFilms(filteredFilms));
       }
     } catch (err: any) {
@@ -116,7 +128,7 @@ const Search: React.FC = () => {
         </button>
       </form>
       <div className={styles.switch}>
-        <CustomSwitch onClick={handleShortParam} />
+        <CustomSwitch checked={short} onClick={handleShortParam} />
         <p className={styles.switchDescription}>Короткометражки</p>
       </div>
     </section>

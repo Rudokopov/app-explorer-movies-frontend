@@ -3,7 +3,7 @@ import { useState } from "react";
 import Main from "../pages/Main";
 import { Route, Routes } from "react-router";
 import Films from "../pages/Films";
-import Cards from "./Cards/Cards";
+import Cards from "./Cards";
 import CardUser from "./CardUser";
 import Auth from "../pages/Auth";
 import UserForm from "./SubmitForm";

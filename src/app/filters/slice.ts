@@ -1,6 +1,8 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Film } from "../films/types";
 import { FilterSliceState } from "./types";
+import { persistReducer } from "redux-persist";
+import storage from "redux-persist/lib/storage";
 
 const initialState: FilterSliceState = {
   resultFilms: [],
@@ -33,4 +35,10 @@ export const {
   setShortType,
   clearResultFilms,
 } = filterSlice.actions;
-export default filterSlice.reducer;
+
+const persistConfig = {
+  key: "filter",
+  storage,
+};
+
+export default persistReducer(persistConfig, filterSlice.reducer);
