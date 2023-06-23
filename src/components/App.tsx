@@ -10,8 +10,14 @@ import UserForm from "./SubmitForm";
 import Error from "./Error";
 import UserPage from "../pages/UserPage";
 import { useAppDispatch } from "../app/store";
-import { fetchLogin, fetchUser, setLogin, setUser } from "../app/api/slice";
-import { User } from "../app/api/types";
+import {
+  fetchLogin,
+  fetchRegister,
+  fetchUser,
+  setLogin,
+  setUser,
+} from "../app/api/slice";
+import { Status, User } from "../app/api/types";
 
 export type AuthParams = {
   name?: string;
@@ -45,7 +51,23 @@ const App: React.FC = () => {
     }
   };
 
-  const registration = () => {};
+  const registration = async (
+    email: string,
+    password: string,
+    name: string | undefined
+  ) => {
+    try {
+      if (name) {
+        const res = await dispatch(fetchRegister({ name, email, password }));
+        if (res && Status.SUCCESS) {
+          alert(`Вы успешно зарегестрировались!`);
+          navigate("/signin");
+        }
+      }
+    } catch (err: any) {
+      alert(`Произошла ошибка ${err.message}`);
+    }
+  };
 
   return (
     <main className={styles.container}>

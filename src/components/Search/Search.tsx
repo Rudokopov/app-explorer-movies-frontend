@@ -122,6 +122,7 @@ const Search: React.FC = () => {
           className={styles.formInput}
           placeholder="Фильмы"
           type="text"
+          required
         />
         <button className={styles.button} type="submit">
           Найти

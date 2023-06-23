@@ -4,6 +4,7 @@ import {
   ApiSliceState,
   LoginParams,
   LoginResponse,
+  RegisterParams,
   Status,
   User,
 } from "./types";
@@ -48,6 +49,18 @@ export const fetchLogin = createAsyncThunk<LoginResponse, LoginParams>(
   }
 );
 
+export const fetchRegister = createAsyncThunk<User, RegisterParams>(
+  "user/fetchRegister",
+  async ({ name, email, password }) => {
+    const response = await axios.post("http://localhost:3000/signup", {
+      name: name,
+      email: email,
+      password: password,
+    });
+    return response.data;
+  }
+);
+
 const apiSlice = createSlice({
   name: "api",
   initialState,
@@ -64,6 +77,7 @@ const apiSlice = createSlice({
   },
 
   extraReducers: (builder) => {
+    // Авторизация
     builder.addCase(fetchLogin.pending, (state) => {
       state.status = Status.LOADING;
     });
@@ -73,6 +87,17 @@ const apiSlice = createSlice({
       state.isLogin = true;
     });
     builder.addCase(fetchLogin.rejected, (state) => {
+      state.status = Status.ERROR;
+    });
+
+    // Регистрация
+    builder.addCase(fetchRegister.pending, (state) => {
+      state.status = Status.LOADING;
+    });
+    builder.addCase(fetchRegister.fulfilled, (state) => {
+      state.status = Status.SUCCESS;
+    });
+    builder.addCase(fetchRegister.rejected, (state) => {
       state.status = Status.ERROR;
     });
   },

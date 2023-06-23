@@ -2,10 +2,15 @@ import React, { useState } from "react";
 import logo from "../../images/logo.svg";
 import styles from "./submitform.module.scss";
 import { Link } from "react-router-dom";
+import { Status } from "../../app/api/types";
 
 type UserFormProps = {
   title: "Добро пожаловать!" | "Рады видеть!";
-  submitOption: (email: string, pasword: string) => void;
+  submitOption: (
+    email: string,
+    pasword: string,
+    name?: string
+  ) => Promise<void>;
   btnTitle: "Зарегестрироваться" | "Войти";
   formType: "auth" | "reg";
 };
@@ -28,10 +33,19 @@ const UserForm: React.FC<UserFormProps> = (props) => {
     setPassword(evt.target.value);
   };
 
+  const reseter = () => {
+    setName("");
+    setEmail("");
+    setPassword("");
+  };
+
   const onSubmit = (evt: React.FormEvent) => {
     evt.preventDefault();
 
-    submitOption(email, password);
+    submitOption(email, password, name);
+    if (Status.SUCCESS) {
+      reseter();
+    }
   };
 
   return (
