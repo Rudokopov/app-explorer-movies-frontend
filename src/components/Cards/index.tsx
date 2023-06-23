@@ -33,7 +33,7 @@ const Cards: React.FC = () => {
   return (
     <>
       <div className={styles.container}>
-        {resultFilms ? (
+        {resultFilms.length >= 1 ? (
           resultFilms.slice(0, displayedCards).map((card: Film, i: number) => {
             return (
               <Card
@@ -46,7 +46,7 @@ const Cards: React.FC = () => {
             );
           })
         ) : (
-          <div>dsa</div>
+          <h2 className={styles.badRequest}>Ничего не найдено</h2>
         )}
       </div>
       <div className={styles.buttonContainer}>

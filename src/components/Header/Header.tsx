@@ -62,21 +62,21 @@ const Header: React.FC = () => {
           <ul className={styles.list}>
             <>
               <li className={styles.listItem}>
-                <button className={styles.button} type="button">
-                  <Link className={styles.buttonLink} to="/signup">
+                <Link className={styles.buttonLink} to="/signup">
+                  <button className={styles.button} type="button">
                     Регистрация
-                  </Link>
-                </button>
+                  </button>
+                </Link>
               </li>
               <li className={styles.listItem}>
-                <button
-                  className={`${styles.button} ${styles.dedicated}`}
-                  type="button"
-                >
-                  <Link className={styles.buttonLink} to="/signin">
+                <Link className={styles.buttonLink} to="/signin">
+                  <button
+                    className={`${styles.button} ${styles.dedicated}`}
+                    type="button"
+                  >
                     Войти
-                  </Link>
-                </button>
+                  </button>
+                </Link>
               </li>
             </>
           </ul>

@@ -20,6 +20,25 @@ const UserForm: React.FC<UserFormProps> = (props) => {
   const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [emailError, setEmailError] = useState<string>("");
+  const [passwordError, setPasswordError] = useState<string>("");
+
+  const validateEmail = (value: string) => {
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailPattern.test(value)) {
+      setEmailError("Некорректный формат электронной почты");
+    } else {
+      setEmailError("");
+    }
+  };
+
+  const validatePassword = (value: string) => {
+    if (value.length < 4) {
+      setPasswordError("Пароль должен содержать не менее 4 символов");
+    } else {
+      setPasswordError("");
+    }
+  };
 
   const onChangeName = (evt: React.ChangeEvent<HTMLInputElement>) => {
     setName(evt.target.value);
@@ -27,10 +46,12 @@ const UserForm: React.FC<UserFormProps> = (props) => {
 
   const onChangeEmail = (evt: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(evt.target.value);
+    validateEmail(evt.target.value);
   };
 
   const onChangePassword = (evt: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(evt.target.value);
+    validatePassword(evt.target.value);
   };
 
   const reseter = () => {
@@ -42,6 +63,10 @@ const UserForm: React.FC<UserFormProps> = (props) => {
   const onSubmit = (evt: React.FormEvent) => {
     evt.preventDefault();
 
+    if (emailError || passwordError) {
+      return;
+    }
+
     submitOption(email, password, name);
     if (Status.SUCCESS) {
       reseter();
@@ -51,7 +76,9 @@ const UserForm: React.FC<UserFormProps> = (props) => {
   return (
     <div className={styles.container}>
       <div className={styles.content}>
-        <img className={styles.image} src={logo} alt="логотип" />
+        <Link className={styles.logoLink} to="/">
+          <img className={styles.image} src={logo} alt="логотип" />
+        </Link>
         <h2 className={styles.title}>{title}</h2>
         <form onSubmit={onSubmit} className={styles.form}>
           <fieldset className={styles.formContainer}>
@@ -75,7 +102,11 @@ const UserForm: React.FC<UserFormProps> = (props) => {
               Email
             </label>
             <input
-              className={styles.formInput}
+              className={
+                emailError
+                  ? `${styles.formInput} ${styles.error}`
+                  : `${styles.formInput}`
+              }
               type="email"
               id="email"
               name="email"
@@ -83,12 +114,19 @@ const UserForm: React.FC<UserFormProps> = (props) => {
               onChange={onChangeEmail}
               required
             />
+            {emailError && (
+              <span className={styles.formMessage}>{emailError}</span>
+            )}
 
             <label className={styles.formLabel} htmlFor="password">
               Пароль
             </label>
             <input
-              className={`${styles.formInput} ${styles.error}`}
+              className={
+                passwordError
+                  ? `${styles.formInput} ${styles.error}`
+                  : `${styles.formInput}`
+              }
               type="password"
               id="password"
               name="password"
@@ -96,7 +134,9 @@ const UserForm: React.FC<UserFormProps> = (props) => {
               onChange={onChangePassword}
               required
             />
-            <span className={styles.formMessage}>Что-то пошло не так...</span>
+            {passwordError && (
+              <span className={styles.formMessage}>{passwordError}</span>
+            )}
           </fieldset>
 
           <div className={styles.tools}>
@@ -107,7 +147,7 @@ const UserForm: React.FC<UserFormProps> = (props) => {
               <>
                 <p className={styles.toolsParagraph}>
                   Ещё не зарегистрированы?
-                  <Link to="/signup" className={styles.toolsParagraph_link}>
+                  <Link to="/signup" className={styles.toolsParagraphLink}>
                     Регистрация
                   </Link>
                 </p>
@@ -116,7 +156,7 @@ const UserForm: React.FC<UserFormProps> = (props) => {
               <>
                 <p className={styles.toolsParagraph}>
                   Уже зарегестрированы?
-                  <Link to="/signin" className={styles.toolsParagraph_link}>
+                  <Link to="/signin" className={styles.toolsParagraphLink}>
                     Войти
                   </Link>
                 </p>
