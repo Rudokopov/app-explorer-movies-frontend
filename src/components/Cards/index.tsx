@@ -40,6 +40,7 @@ const Cards: React.FC = () => {
                 title={card.nameRU}
                 image={`https://api.nomoreparties.co/${card.image.url}`}
                 duration={convertToHours(card.duration)}
+                trailerLink={card.trailerLink}
                 key={i}
               />
             );

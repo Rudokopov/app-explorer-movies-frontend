@@ -1,24 +1,25 @@
-import React, { useState } from "react";
+import React from "react";
 import styles from "./card.module.scss";
 
 type CardProps = {
   image: string;
   title: string;
-  // isSave: boolean;
+  trailerLink: string;
   duration: string;
   myFilmsPage?: boolean;
 };
 
 const Card: React.FC<CardProps> = (props) => {
-  const { image, title, duration, myFilmsPage } = props;
+  const { image, title, duration, myFilmsPage, trailerLink } = props;
   return (
     <div className={styles.container}>
-      <img className={styles.image} src={image} alt="Картинка фильма" />
+      <a target="_blank" rel="noreferrer" href={trailerLink}>
+        <img className={styles.image} src={image} alt={title} />
+      </a>
       <div className={styles.content}>
         <h3 className={styles.title}>{title}</h3>
         {!myFilmsPage ? (
           <svg
-            // className={isSave ? `${styles.active}` : ""}
             width="28"
             height="28"
             viewBox="0 0 28 28"

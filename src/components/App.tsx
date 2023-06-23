@@ -1,20 +1,49 @@
 import styles from "./app.module.scss";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Main from "../pages/Main";
-import { Route, Routes } from "react-router";
+import { Route, Routes, useNavigate } from "react-router";
 import Films from "../pages/Films";
 import Cards from "./Cards";
 import CardUser from "./CardUser";
 import Auth from "../pages/Auth";
 import UserForm from "./SubmitForm";
 import Error from "./Error";
-import UserInfo from "./UserInfo/UserInfo";
 import UserPage from "../pages/UserPage";
+import { useAppDispatch } from "../app/store";
+import { fetchLogin, fetchUser, setLogin, setUser } from "../app/api/slice";
+import { User } from "../app/api/types";
+
+export type AuthParams = {
+  name?: string;
+  email: string;
+  password: string;
+};
 
 const App: React.FC = () => {
-  const [isLoggin, setLoggin] = useState(false);
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
-  const login = () => {};
+  const getUser = async () => {
+    const res = await dispatch(fetchUser());
+    const currentUser = res.payload as User;
+    if (currentUser) {
+      setUser(currentUser);
+      dispatch(setLogin(true));
+    }
+  };
+
+  useEffect(() => {
+    getUser();
+  }, []);
+
+  const login = async (email: string, password: string) => {
+    const res: any = await dispatch(fetchLogin({ email, password }));
+    if (res.payload) {
+      const token: string = res.payload.token;
+      localStorage.setItem("jwt", token);
+      navigate("/");
+    }
+  };
 
   const registration = () => {};
 

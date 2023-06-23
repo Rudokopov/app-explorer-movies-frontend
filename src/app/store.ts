@@ -1,11 +1,12 @@
 import { configureStore } from "@reduxjs/toolkit";
 import film from "./films/slice";
 import filter from "./filters/slice";
+import api from "./api/slice";
 import { useDispatch } from "react-redux";
 import { persistStore } from "redux-persist";
 
 export const store = configureStore({
-  reducer: { film, filter },
+  reducer: { film, filter, api },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: false,
