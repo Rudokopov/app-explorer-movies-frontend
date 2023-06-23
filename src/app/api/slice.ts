@@ -6,6 +6,7 @@ import {
   LoginResponse,
   RegisterParams,
   Status,
+  UpdateUserParams,
   User,
 } from "./types";
 import { Film } from "../films/types";
@@ -61,6 +62,25 @@ export const fetchRegister = createAsyncThunk<User, RegisterParams>(
   }
 );
 
+export const fetchUserUpdate = createAsyncThunk<User, UpdateUserParams>(
+  "user/fetchUserUpdate",
+  async ({ name, email }, { getState }) => {
+    const token = localStorage.getItem("jwt");
+    const headers = { Authorization: `Bearer ${token}` };
+
+    const response = await axios.patch(
+      "http://localhost:3000/users/me",
+      {
+        name: name,
+        email: email,
+      },
+      { headers }
+    );
+
+    return response.data;
+  }
+);
+
 const apiSlice = createSlice({
   name: "api",
   initialState,
@@ -98,6 +118,18 @@ const apiSlice = createSlice({
       state.status = Status.SUCCESS;
     });
     builder.addCase(fetchRegister.rejected, (state) => {
+      state.status = Status.ERROR;
+    });
+
+    // Обновление юзера
+    builder.addCase(fetchUserUpdate.pending, (state) => {
+      state.status = Status.LOADING;
+    });
+    builder.addCase(fetchUserUpdate.fulfilled, (state, action) => {
+      state.user = action.payload;
+      state.status = Status.SUCCESS;
+    });
+    builder.addCase(fetchUserUpdate.rejected, (state) => {
       state.status = Status.ERROR;
     });
   },

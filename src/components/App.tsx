@@ -33,7 +33,7 @@ const App: React.FC = () => {
     const res = await dispatch(fetchUser());
     const currentUser = res.payload as User;
     if (currentUser) {
-      setUser(currentUser);
+      dispatch(setUser(currentUser));
       dispatch(setLogin(true));
     }
   };

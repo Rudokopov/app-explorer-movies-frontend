@@ -36,3 +36,8 @@ export type LoginResponse = {
   email: string;
   token: string;
 };
+
+export type UpdateUserParams = {
+  name: string;
+  email: string;
+};

@@ -41,6 +41,9 @@ const UserForm: React.FC<UserFormProps> = (props) => {
   };
 
   const onChangeName = (evt: React.ChangeEvent<HTMLInputElement>) => {
+    if (evt.target.value.includes(" ")) {
+      return;
+    }
     setName(evt.target.value);
   };
 
@@ -50,6 +53,9 @@ const UserForm: React.FC<UserFormProps> = (props) => {
   };
 
   const onChangePassword = (evt: React.ChangeEvent<HTMLInputElement>) => {
+    if (evt.target.value.includes(" ")) {
+      return;
+    }
     setPassword(evt.target.value);
     validatePassword(evt.target.value);
   };
