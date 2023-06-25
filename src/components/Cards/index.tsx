@@ -7,7 +7,7 @@ import { Film } from "../../app/films/types";
 import { useResize } from "../../utils/useResize";
 import { fetchCreateMovie, setFilms } from "../../app/api/slice";
 import { useAppDispatch } from "../../app/store";
-import { CreateMovieParams } from "../../app/api/types";
+import { MovieFromBackend } from "../../app/api/types";
 import { selectApiData } from "../../app/api/selectors";
 
 const Cards: React.FC = () => {
@@ -18,7 +18,7 @@ const Cards: React.FC = () => {
   const [showMoreButton, setShowMoreButton] = useState(true);
   const { films } = useSelector(selectApiData);
 
-  const addFavoriteMovie = async (params: CreateMovieParams) => {
+  const addFavoriteMovie = async (params: MovieFromBackend) => {
     const { movieId, nameRU, description, duration, trailerLink, image } =
       params;
     try {
@@ -33,7 +33,7 @@ const Cards: React.FC = () => {
         })
       );
       if (res.payload) {
-        const newMovie = res.payload as CreateMovieParams;
+        const newMovie = res.payload as MovieFromBackend;
         dispatch(setFilms([...films, newMovie]));
       }
     } catch (err: any) {

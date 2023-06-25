@@ -1,4 +1,5 @@
 export type User = {
+  token: string;
   _id: string;
   name: string;
   email: string;
@@ -11,7 +12,7 @@ export enum Status {
 }
 
 export type ApiSliceState = {
-  films: CreateMovieParams[];
+  films: MovieFromBackend[];
   user: User;
   status: Status;
   isLogin: boolean;
@@ -29,10 +30,10 @@ export type RegisterParams = {
 };
 
 export type LoginResponse = {
+  token: string;
   _id: string;
   name: string;
   email: string;
-  token: string;
 };
 
 export type UpdateUserParams = {
@@ -40,8 +41,8 @@ export type UpdateUserParams = {
   email: string;
 };
 
-export type CreateMovieParams = {
-  movieId: string;
+export type MovieFromBackend = {
+  movieId: number;
   nameRU: string;
   description: string;
   duration: number;

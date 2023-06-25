@@ -12,6 +12,7 @@ import { fetchFilms } from "../../app/films/slice";
 import { Film } from "../../app/films/types";
 import { useSelector } from "react-redux";
 import { selectFilterData } from "../../app/filters/selectors";
+import { MovieFromBackend } from "../../app/api/types";
 
 const CustomSwitch = styled(Switch)(({ theme }) => ({
   width: 36,

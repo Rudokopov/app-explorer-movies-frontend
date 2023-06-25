@@ -14,12 +14,12 @@ import {
   fetchLogin,
   fetchRegister,
   fetchUser,
-  fetchCreateMovie,
+  fetchGetUserMovies,
   setFilms,
   setLogin,
   setUser,
 } from "../app/api/slice";
-import { Status, User } from "../app/api/types";
+import { LoginParams, LoginResponse, Status, User } from "../app/api/types";
 import { Film } from "../app/films/types";
 
 export type AuthParams = {
@@ -41,19 +41,15 @@ const App: React.FC = () => {
     }
   };
 
-  // const getUserMovies = async () => {
-  //   const films = await dispatch(fetchUserMovies());
-  // };
-
   useEffect(() => {
     getUser();
   }, []);
 
   const login = async (email: string, password: string) => {
-    const res: any = await dispatch(fetchLogin({ email, password }));
+    const res = await dispatch(fetchLogin({ email, password })); // не забыть типизировать, возвращает юзака
     if (res.payload) {
-      const token: string = res.payload.token;
-      localStorage.setItem("jwt", token);
+      const token = res.payload as LoginResponse;
+      localStorage.setItem("jwt", token.token);
       navigate("/");
     }
   };

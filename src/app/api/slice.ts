@@ -2,11 +2,10 @@ import axios from "axios";
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import {
   ApiSliceState,
-  CreateMovieParams,
+  MovieFromBackend,
   LoginParams,
   LoginResponse,
   RegisterParams,
-  RemoveMovieParams,
   Status,
   UpdateUserParams,
   User,
@@ -15,6 +14,7 @@ import {
 const initialState: ApiSliceState = {
   films: [],
   user: {
+    token: "",
     _id: "",
     name: "",
     email: "",
@@ -43,11 +43,14 @@ export const fetchUser = createAsyncThunk<User>(
 export const fetchLogin = createAsyncThunk<LoginResponse, LoginParams>(
   "user/fetchLogin",
   async ({ email, password }) => {
-    const response = await axios.post("http://localhost:3000/signin", {
-      email: email,
-      password: password,
-    });
-    return response.data;
+    const response = await axios.post<LoginResponse>(
+      "http://localhost:3000/signin",
+      {
+        email: email,
+        password: password,
+      }
+    );
+    return response.data as LoginResponse;
   }
 );
 
@@ -83,8 +86,8 @@ export const fetchUserUpdate = createAsyncThunk<User, UpdateUserParams>(
 );
 
 export const fetchCreateMovie = createAsyncThunk<
-  CreateMovieParams[],
-  CreateMovieParams
+  MovieFromBackend[],
+  MovieFromBackend
 >(
   "user/fetchUserMovies",
   async ({ movieId, nameRU, description, duration, trailerLink, image }) => {
@@ -107,7 +110,7 @@ export const fetchCreateMovie = createAsyncThunk<
   }
 );
 
-export const fetchGetUserMovies = createAsyncThunk<CreateMovieParams[]>(
+export const fetchGetUserMovies = createAsyncThunk<MovieFromBackend[]>(
   "user/fetchGetUserMovies",
   async () => {
     const token = localStorage.getItem("jwt");
@@ -120,7 +123,7 @@ export const fetchGetUserMovies = createAsyncThunk<CreateMovieParams[]>(
   }
 );
 
-export const fetchRemoveMovie = createAsyncThunk<CreateMovieParams[], Number>(
+export const fetchRemoveMovie = createAsyncThunk<MovieFromBackend[], Number>(
   "user/fetchRemoveMovie",
   async (movieId) => {
     const token = localStorage.getItem("jwt");
@@ -138,14 +141,18 @@ const apiSlice = createSlice({
   name: "api",
   initialState,
   reducers: {
-    setFilms(state, action: PayloadAction<CreateMovieParams[]>) {
+    setFilms(state, action: PayloadAction<MovieFromBackend[]>) {
       state.films = action.payload;
     },
-    setUser(state, action: PayloadAction<User>) {
+    setUser(state, action: PayloadAction<LoginResponse>) {
       state.user = action.payload;
     },
     setLogin(state, action: PayloadAction<boolean>) {
       state.isLogin = action.payload;
+    },
+    removeFilm(state, action: PayloadAction<number>) {
+      const movieId = action.payload;
+      state.films = state.films.filter((film) => film.movieId !== movieId);
     },
   },
 
@@ -225,5 +232,5 @@ const apiSlice = createSlice({
     });
   },
 });
-export const { setFilms, setLogin, setUser } = apiSlice.actions;
+export const { setFilms, setLogin, setUser, removeFilm } = apiSlice.actions;
 export default apiSlice.reducer;

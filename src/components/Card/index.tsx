@@ -2,17 +2,17 @@ import React from "react";
 import styles from "./card.module.scss";
 import { Film } from "../../app/films/types";
 import { convertToHours } from "../../utils/utils";
-import { CreateMovieParams, RemoveMovieParams } from "../../app/api/types";
+import { MovieFromBackend, RemoveMovieParams } from "../../app/api/types";
 
 type CardProps = {
-  movieId: string;
+  movieId: number;
   image: string;
   description: string;
   nameRU: string;
   trailerLink: string;
   duration: number;
   myFilmsPage?: boolean;
-  addFavoriteMovie?: (params: CreateMovieParams) => Promise<void>;
+  addFavoriteMovie?: (params: MovieFromBackend) => Promise<void>;
   removeUserFilm?: (i: number) => Promise<void>;
 };
 
@@ -42,7 +42,7 @@ const Card: React.FC<CardProps> = (props) => {
     }
 
     return;
-  }; // Необходимо что бы это гавно заработало на SVG иконке, другого варианта не нашел
+  }; // Необходима обертка что бы это гавно заработало на SVG иконке, другого варианта не нашел
 
   const handleRemoveMovie: React.MouseEventHandler<SVGSVGElement> = () => {
     if (removeUserFilm) {
@@ -116,6 +116,7 @@ const Card: React.FC<CardProps> = (props) => {
         ) : (
           <svg
             onClick={handleRemoveMovie}
+            className={styles.deleteIcon}
             width="16"
             height="16"
             viewBox="0 0 16 16"
