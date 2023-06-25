@@ -1,5 +1,5 @@
 import styles from "./app.module.scss";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import Main from "../pages/Main";
 import { Route, Routes, useNavigate } from "react-router";
 import Films from "../pages/Films";

@@ -77,6 +77,9 @@ const UserForm: React.FC<UserFormProps> = (props) => {
     if (Status.SUCCESS) {
       reseter();
     }
+    if (Status.ERROR) {
+      alert(`Произошла ошибка, попробуйте войти позже`);
+    }
   };
 
   return (
