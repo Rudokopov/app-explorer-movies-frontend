@@ -30,11 +30,14 @@ export const fetchUser = createAsyncThunk<User>(
     if (!token) {
       throw new Error("Token not found");
     }
-    const response = await axios.get<User>("http://localhost:3000/users/me", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const response = await axios.get<User>(
+      "https://api.movie-app.nomoredomains.rocks/users/me",
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
 
     return response.data;
   }
@@ -44,7 +47,7 @@ export const fetchLogin = createAsyncThunk<LoginResponse, LoginParams>(
   "user/fetchLogin",
   async ({ email, password }) => {
     const response = await axios.post<LoginResponse>(
-      "http://localhost:3000/signin",
+      "https://api.movie-app.nomoredomains.rocks/signin",
       {
         email: email,
         password: password,
@@ -57,11 +60,14 @@ export const fetchLogin = createAsyncThunk<LoginResponse, LoginParams>(
 export const fetchRegister = createAsyncThunk<User, RegisterParams>(
   "user/fetchRegister",
   async ({ name, email, password }) => {
-    const response = await axios.post("http://localhost:3000/signup", {
-      name: name,
-      email: email,
-      password: password,
-    });
+    const response = await axios.post(
+      "https://api.movie-app.nomoredomains.rocks/signup",
+      {
+        name: name,
+        email: email,
+        password: password,
+      }
+    );
     return response.data;
   }
 );
@@ -73,7 +79,7 @@ export const fetchUserUpdate = createAsyncThunk<User, UpdateUserParams>(
     const headers = { Authorization: `Bearer ${token}` };
 
     const response = await axios.patch(
-      "http://localhost:3000/users/me",
+      "https://api.movie-app.nomoredomains.rocks/users/me",
       {
         name: name,
         email: email,
@@ -94,7 +100,7 @@ export const fetchCreateMovie = createAsyncThunk<
     const token = localStorage.getItem("jwt");
     const headers = { Authorization: `Bearer ${token}` };
     const response = await axios.post(
-      "http://localhost:3000/movies",
+      "https://api.movie-app.nomoredomains.rocks/movies",
       {
         movieId,
         nameRU,
@@ -115,9 +121,12 @@ export const fetchGetUserMovies = createAsyncThunk<MovieFromBackend[]>(
   async () => {
     const token = localStorage.getItem("jwt");
     const headers = { Authorization: `Bearer ${token}` };
-    const response = await axios.get("http://localhost:3000/movies", {
-      headers,
-    });
+    const response = await axios.get(
+      "https://api.movie-app.nomoredomains.rocks/movies",
+      {
+        headers,
+      }
+    );
 
     return response.data;
   }
@@ -128,10 +137,13 @@ export const fetchRemoveMovie = createAsyncThunk<MovieFromBackend[], Number>(
   async (movieId) => {
     const token = localStorage.getItem("jwt");
     const headers = { Authorization: `Bearer ${token}` };
-    const response = await axios.delete("http://localhost:3000/movies", {
-      data: { movieId },
-      headers,
-    });
+    const response = await axios.delete(
+      "https://api.movie-app.nomoredomains.rocks/movies",
+      {
+        data: { movieId },
+        headers,
+      }
+    );
 
     return response.data;
   }
