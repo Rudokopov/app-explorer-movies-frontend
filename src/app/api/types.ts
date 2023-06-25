@@ -41,3 +41,12 @@ export type UpdateUserParams = {
   name: string;
   email: string;
 };
+
+export type CreateMovieParams = {
+  movieId: string;
+  nameRU: string;
+  description: string;
+  duration: number;
+  trailerLink: string;
+  image: string;
+};

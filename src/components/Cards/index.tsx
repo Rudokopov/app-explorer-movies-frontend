@@ -4,14 +4,36 @@ import styles from "./cards.module.scss";
 import { useSelector } from "react-redux";
 import { selectFilterData } from "../../app/filters/selectors";
 import { Film } from "../../app/films/types";
-import { convertToHours } from "../../utils/utils";
 import { useResize } from "../../utils/useResize";
+import { fetchCreateMovie } from "../../app/api/slice";
+import { useAppDispatch } from "../../app/store";
+import { CreateMovieParams } from "../../app/api/types";
 
 const Cards: React.FC = () => {
+  const dispatch = useAppDispatch();
   const windowParam = useResize();
   const { resultFilms } = useSelector(selectFilterData);
   const [displayedCards, setDisplayedCards] = useState(12);
   const [showMoreButton, setShowMoreButton] = useState(true);
+
+  const addFavoriteMovie = async (params: CreateMovieParams) => {
+    const { movieId, nameRU, description, duration, trailerLink, image } =
+      params;
+    try {
+      await dispatch(
+        fetchCreateMovie({
+          movieId,
+          nameRU,
+          description,
+          duration,
+          trailerLink,
+          image,
+        })
+      );
+    } catch (err: any) {
+      alert(`Произошла ошибка при добавлении фильма на сервер ${err.name}`);
+    }
+  };
 
   const showMoreCards = () => {
     setDisplayedCards((prevCount) => {
@@ -37,11 +59,14 @@ const Cards: React.FC = () => {
           resultFilms.slice(0, displayedCards).map((card: Film, i: number) => {
             return (
               <Card
-                title={card.nameRU}
+                movieId={card.id}
+                nameRU={card.nameRU}
+                description={card.description}
                 image={`https://api.nomoreparties.co/${card.image.url}`}
-                duration={convertToHours(card.duration)}
+                duration={card.duration}
                 trailerLink={card.trailerLink}
                 key={i}
+                addFavoriteMovie={addFavoriteMovie}
               />
             );
           })

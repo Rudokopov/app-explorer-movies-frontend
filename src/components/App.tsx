@@ -14,10 +14,13 @@ import {
   fetchLogin,
   fetchRegister,
   fetchUser,
+  fetchCreateMovie,
+  setFilms,
   setLogin,
   setUser,
 } from "../app/api/slice";
 import { Status, User } from "../app/api/types";
+import { Film } from "../app/films/types";
 
 export type AuthParams = {
   name?: string;
@@ -37,6 +40,10 @@ const App: React.FC = () => {
       dispatch(setLogin(true));
     }
   };
+
+  // const getUserMovies = async () => {
+  //   const films = await dispatch(fetchUserMovies());
+  // };
 
   useEffect(() => {
     getUser();

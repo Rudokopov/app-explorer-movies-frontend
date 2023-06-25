@@ -2,6 +2,7 @@ import axios from "axios";
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import {
   ApiSliceState,
+  CreateMovieParams,
   LoginParams,
   LoginResponse,
   RegisterParams,
@@ -81,6 +82,28 @@ export const fetchUserUpdate = createAsyncThunk<User, UpdateUserParams>(
   }
 );
 
+export const fetchCreateMovie = createAsyncThunk<Film[], CreateMovieParams>(
+  "user/fetchUserMovies",
+  async ({ movieId, nameRU, description, duration, trailerLink, image }) => {
+    const token = localStorage.getItem("jwt");
+    const headers = { Authorization: `Bearer ${token}` };
+    const response = await axios.post(
+      "http://localhost:3000/movies",
+      {
+        movieId,
+        nameRU,
+        description,
+        duration,
+        trailerLink,
+        image,
+      },
+      { headers }
+    );
+
+    return response.data;
+  }
+);
+
 const apiSlice = createSlice({
   name: "api",
   initialState,
@@ -130,6 +153,34 @@ const apiSlice = createSlice({
       state.status = Status.SUCCESS;
     });
     builder.addCase(fetchUserUpdate.rejected, (state) => {
+      state.status = Status.ERROR;
+    });
+
+    // Добавление фильма на сервере
+    builder.addCase(fetchCreateMovie.pending, (state) => {
+      state.films = [];
+      state.status = Status.LOADING;
+    });
+    builder.addCase(fetchCreateMovie.fulfilled, (state, action) => {
+      state.films = action.payload;
+      state.status = Status.SUCCESS;
+    });
+    builder.addCase(fetchCreateMovie.rejected, (state) => {
+      state.films = [];
+      state.status = Status.ERROR;
+    });
+
+    // Удаление фильма из сохраненных фильмов
+    builder.addCase(fetchCreateMovie.pending, (state) => {
+      state.films = [];
+      state.status = Status.LOADING;
+    });
+    builder.addCase(fetchCreateMovie.fulfilled, (state, action) => {
+      state.films = action.payload;
+      state.status = Status.SUCCESS;
+    });
+    builder.addCase(fetchCreateMovie.rejected, (state) => {
+      state.films = [];
       state.status = Status.ERROR;
     });
   },

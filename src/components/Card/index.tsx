@@ -1,25 +1,54 @@
 import React from "react";
 import styles from "./card.module.scss";
+import { Film } from "../../app/films/types";
+import { convertToHours } from "../../utils/utils";
+import { CreateMovieParams } from "../../app/api/types";
 
 type CardProps = {
+  movieId: string;
   image: string;
-  title: string;
+  description: string;
+  nameRU: string;
   trailerLink: string;
-  duration: string;
+  duration: number;
   myFilmsPage?: boolean;
+  addFavoriteMovie: (params: CreateMovieParams) => Promise<void>;
 };
 
 const Card: React.FC<CardProps> = (props) => {
-  const { image, title, duration, myFilmsPage, trailerLink } = props;
+  const {
+    movieId,
+    image,
+    description,
+    nameRU,
+    duration,
+    trailerLink,
+    myFilmsPage,
+    addFavoriteMovie,
+  } = props;
+
+  const handleAddMovie: React.MouseEventHandler<SVGSVGElement> = () => {
+    addFavoriteMovie({
+      movieId,
+      image,
+      description,
+      nameRU,
+      duration,
+      trailerLink,
+    });
+    return;
+  }; // Необходимо что бы это гавно заработало на SVG иконке, другого варианта не нашел
+
   return (
     <div className={styles.container}>
       <a target="_blank" rel="noreferrer" href={trailerLink}>
-        <img className={styles.image} src={image} alt={title} />
+        <img className={styles.image} src={image} alt={nameRU} />
       </a>
       <div className={styles.content}>
-        <h3 className={styles.title}>{title}</h3>
+        <h3 className={styles.title}>{nameRU}</h3>
         {!myFilmsPage ? (
           <svg
+            onClick={handleAddMovie}
             width="28"
             height="28"
             viewBox="0 0 28 28"
@@ -89,7 +118,7 @@ const Card: React.FC<CardProps> = (props) => {
           </svg>
         )}
       </div>
-      <p className={styles.description}>{duration}</p>
+      <p className={styles.description}>{convertToHours(duration)}</p>
     </div>
   );
 };
