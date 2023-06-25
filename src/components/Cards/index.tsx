@@ -5,9 +5,10 @@ import { useSelector } from "react-redux";
 import { selectFilterData } from "../../app/filters/selectors";
 import { Film } from "../../app/films/types";
 import { useResize } from "../../utils/useResize";
-import { fetchCreateMovie } from "../../app/api/slice";
+import { fetchCreateMovie, setFilms } from "../../app/api/slice";
 import { useAppDispatch } from "../../app/store";
 import { CreateMovieParams } from "../../app/api/types";
+import { selectApiData } from "../../app/api/selectors";
 
 const Cards: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -15,12 +16,13 @@ const Cards: React.FC = () => {
   const { resultFilms } = useSelector(selectFilterData);
   const [displayedCards, setDisplayedCards] = useState(12);
   const [showMoreButton, setShowMoreButton] = useState(true);
+  const { films } = useSelector(selectApiData);
 
   const addFavoriteMovie = async (params: CreateMovieParams) => {
     const { movieId, nameRU, description, duration, trailerLink, image } =
       params;
     try {
-      await dispatch(
+      const res = await dispatch(
         fetchCreateMovie({
           movieId,
           nameRU,
@@ -30,6 +32,10 @@ const Cards: React.FC = () => {
           image,
         })
       );
+      if (res.payload) {
+        const newMovie = res.payload as CreateMovieParams;
+        dispatch(setFilms([...films, newMovie]));
+      }
     } catch (err: any) {
       alert(`Произошла ошибка при добавлении фильма на сервер ${err.name}`);
     }

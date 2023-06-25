@@ -2,7 +2,7 @@ import React from "react";
 import styles from "./card.module.scss";
 import { Film } from "../../app/films/types";
 import { convertToHours } from "../../utils/utils";
-import { CreateMovieParams } from "../../app/api/types";
+import { CreateMovieParams, RemoveMovieParams } from "../../app/api/types";
 
 type CardProps = {
   movieId: string;
@@ -12,7 +12,8 @@ type CardProps = {
   trailerLink: string;
   duration: number;
   myFilmsPage?: boolean;
-  addFavoriteMovie: (params: CreateMovieParams) => Promise<void>;
+  addFavoriteMovie?: (params: CreateMovieParams) => Promise<void>;
+  removeUserFilm?: (i: number) => Promise<void>;
 };
 
 const Card: React.FC<CardProps> = (props) => {
@@ -25,19 +26,30 @@ const Card: React.FC<CardProps> = (props) => {
     trailerLink,
     myFilmsPage,
     addFavoriteMovie,
+    removeUserFilm,
   } = props;
 
   const handleAddMovie: React.MouseEventHandler<SVGSVGElement> = () => {
-    addFavoriteMovie({
-      movieId,
-      image,
-      description,
-      nameRU,
-      duration,
-      trailerLink,
-    });
+    if (addFavoriteMovie) {
+      addFavoriteMovie({
+        movieId,
+        image,
+        description,
+        nameRU,
+        duration,
+        trailerLink,
+      });
+    }
+
     return;
   }; // Необходимо что бы это гавно заработало на SVG иконке, другого варианта не нашел
+
+  const handleRemoveMovie: React.MouseEventHandler<SVGSVGElement> = () => {
+    if (removeUserFilm) {
+      const id = Number(movieId);
+      removeUserFilm(id);
+    }
+  };
 
   return (
     <div className={styles.container}>
@@ -103,6 +115,7 @@ const Card: React.FC<CardProps> = (props) => {
           </svg>
         ) : (
           <svg
+            onClick={handleRemoveMovie}
             width="16"
             height="16"
             viewBox="0 0 16 16"

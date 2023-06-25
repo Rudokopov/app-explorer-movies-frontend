@@ -1,5 +1,3 @@
-import { Film } from "../films/types";
-
 export type User = {
   _id: string;
   name: string;
@@ -13,7 +11,7 @@ export enum Status {
 }
 
 export type ApiSliceState = {
-  films: Film[];
+  films: CreateMovieParams[];
   user: User;
   status: Status;
   isLogin: boolean;
@@ -49,4 +47,8 @@ export type CreateMovieParams = {
   duration: number;
   trailerLink: string;
   image: string;
+};
+
+export type RemoveMovieParams = {
+  movieId: number;
 };

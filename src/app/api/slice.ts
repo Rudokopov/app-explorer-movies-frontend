@@ -6,11 +6,11 @@ import {
   LoginParams,
   LoginResponse,
   RegisterParams,
+  RemoveMovieParams,
   Status,
   UpdateUserParams,
   User,
 } from "./types";
-import { Film } from "../films/types";
 
 const initialState: ApiSliceState = {
   films: [],
@@ -82,7 +82,10 @@ export const fetchUserUpdate = createAsyncThunk<User, UpdateUserParams>(
   }
 );
 
-export const fetchCreateMovie = createAsyncThunk<Film[], CreateMovieParams>(
+export const fetchCreateMovie = createAsyncThunk<
+  CreateMovieParams[],
+  CreateMovieParams
+>(
   "user/fetchUserMovies",
   async ({ movieId, nameRU, description, duration, trailerLink, image }) => {
     const token = localStorage.getItem("jwt");
@@ -104,11 +107,38 @@ export const fetchCreateMovie = createAsyncThunk<Film[], CreateMovieParams>(
   }
 );
 
+export const fetchGetUserMovies = createAsyncThunk<CreateMovieParams[]>(
+  "user/fetchGetUserMovies",
+  async () => {
+    const token = localStorage.getItem("jwt");
+    const headers = { Authorization: `Bearer ${token}` };
+    const response = await axios.get("http://localhost:3000/movies", {
+      headers,
+    });
+
+    return response.data;
+  }
+);
+
+export const fetchRemoveMovie = createAsyncThunk<CreateMovieParams[], Number>(
+  "user/fetchRemoveMovie",
+  async (movieId) => {
+    const token = localStorage.getItem("jwt");
+    const headers = { Authorization: `Bearer ${token}` };
+    const response = await axios.delete("http://localhost:3000/movies", {
+      data: { movieId },
+      headers,
+    });
+
+    return response.data;
+  }
+);
+
 const apiSlice = createSlice({
   name: "api",
   initialState,
   reducers: {
-    setFilms(state, action: PayloadAction<Film[]>) {
+    setFilms(state, action: PayloadAction<CreateMovieParams[]>) {
       state.films = action.payload;
     },
     setUser(state, action: PayloadAction<User>) {
@@ -158,7 +188,6 @@ const apiSlice = createSlice({
 
     // Добавление фильма на сервере
     builder.addCase(fetchCreateMovie.pending, (state) => {
-      state.films = [];
       state.status = Status.LOADING;
     });
     builder.addCase(fetchCreateMovie.fulfilled, (state, action) => {
@@ -166,21 +195,32 @@ const apiSlice = createSlice({
       state.status = Status.SUCCESS;
     });
     builder.addCase(fetchCreateMovie.rejected, (state) => {
+      state.status = Status.ERROR;
+    });
+
+    // Поулчение фильмов с сервера
+    builder.addCase(fetchGetUserMovies.pending, (state) => {
+      state.films = [];
+      state.status = Status.LOADING;
+    });
+    builder.addCase(fetchGetUserMovies.fulfilled, (state, action) => {
+      state.films = action.payload;
+      state.status = Status.SUCCESS;
+    });
+    builder.addCase(fetchGetUserMovies.rejected, (state) => {
       state.films = [];
       state.status = Status.ERROR;
     });
 
-    // Удаление фильма из сохраненных фильмов
-    builder.addCase(fetchCreateMovie.pending, (state) => {
-      state.films = [];
+    // Удаление фильма с сервера
+    builder.addCase(fetchRemoveMovie.pending, (state) => {
       state.status = Status.LOADING;
     });
-    builder.addCase(fetchCreateMovie.fulfilled, (state, action) => {
+    builder.addCase(fetchRemoveMovie.fulfilled, (state, action) => {
       state.films = action.payload;
       state.status = Status.SUCCESS;
     });
-    builder.addCase(fetchCreateMovie.rejected, (state) => {
-      state.films = [];
+    builder.addCase(fetchRemoveMovie.rejected, (state) => {
       state.status = Status.ERROR;
     });
   },
