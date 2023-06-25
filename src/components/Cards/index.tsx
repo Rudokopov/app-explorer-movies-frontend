@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Card from "../Card";
 import styles from "./cards.module.scss";
 import { useSelector } from "react-redux";
@@ -41,6 +41,7 @@ const Cards: React.FC = () => {
       if (res.payload) {
         const newMovie = res.payload as MovieFromBackend;
         dispatch(setFilms([...userFilms, newMovie]));
+        getUserFilms();
       }
     } catch (err: any) {
       alert(`Произошла ошибка при добавлении фильма на сервер ${err.name}`);
@@ -57,11 +58,15 @@ const Cards: React.FC = () => {
   };
 
   const removeUserFilm = async (movieId: number) => {
-    const res = await dispatch(fetchRemoveMovie(movieId));
+    try {
+      const res = await dispatch(fetchRemoveMovie(movieId));
 
-    if (res.payload) {
-      const deletedMovie = res.payload as MovieFromBackend;
-      dispatch(removeFilm(deletedMovie.movieId));
+      if (res.payload) {
+        const deletedMovie = res.payload as MovieFromBackend;
+        dispatch(removeFilm(deletedMovie.movieId));
+      }
+    } catch (err: any) {
+      alert(`Произошла ошибка при удалении фильма ${err.message}`);
     }
   }; // Либо дублировать, либо в самой карточке делать, но это трата ресурсов каждый раз создавать функцию, ниче не могу придумать, 3 утра, уже 26 число - ласт дей сдачи, надо хоть что то показать =/
 
@@ -73,32 +78,29 @@ const Cards: React.FC = () => {
     }
   }, [resultFilms, displayedCards]);
 
-  const getUserFilms = async () => {
+  const getUserFilms = useCallback(async () => {
     try {
-      const res = await dispatch(fetchGetUserMovies());
-      if (res.payload) {
-        const userFilms = res.payload as MovieFromBackend[];
-        dispatch(setFilms(userFilms));
-      }
+      await dispatch(fetchGetUserMovies());
     } catch (err: any) {
       alert(
         `Произошла ошибка при получении фильмов юзака в компоненте Cards ${err.message}`
       );
     }
-  }; // Знаю что похожая функция уже есть, но она плотно завязана на поиске, поэтому рентабельнее написать еще одну
+  }, [dispatch]); // Знаю что похожая функция уже есть, но она плотно завязана на поиске, поэтому рентабельнее написать еще одну
 
   useEffect(() => {
     getUserFilms();
-  }, []);
+  }, [getUserFilms]);
 
   return (
     <>
       <div className={styles.container}>
         {resultFilms.length >= 1 ? (
           resultFilms.slice(0, displayedCards).map((card: Film, i: number) => {
-            const isAddedUser = userFilms?.some(
-              (userFilm) => userFilm.nameRU === card.nameRU
-            ); // Тут ломается прила
+            const isAddedUser =
+              Array.isArray(userFilms) &&
+              userFilms.some((userFilm) => userFilm.nameRU === card.nameRU);
+
             return (
               <Card
                 movieId={card.id}
