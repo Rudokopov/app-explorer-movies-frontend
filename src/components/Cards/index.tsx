@@ -5,7 +5,13 @@ import { useSelector } from "react-redux";
 import { selectFilterData } from "../../app/filters/selectors";
 import { Film } from "../../app/films/types";
 import { useResize } from "../../utils/useResize";
-import { fetchCreateMovie, setFilms } from "../../app/api/slice";
+import {
+  fetchCreateMovie,
+  fetchGetUserMovies,
+  fetchRemoveMovie,
+  removeFilm,
+  setFilms,
+} from "../../app/api/slice";
 import { useAppDispatch } from "../../app/store";
 import { MovieFromBackend } from "../../app/api/types";
 import { selectApiData } from "../../app/api/selectors";
@@ -16,7 +22,7 @@ const Cards: React.FC = () => {
   const { resultFilms } = useSelector(selectFilterData);
   const [displayedCards, setDisplayedCards] = useState(12);
   const [showMoreButton, setShowMoreButton] = useState(true);
-  const { films } = useSelector(selectApiData);
+  const { userFilms } = useSelector(selectApiData);
 
   const addFavoriteMovie = async (params: MovieFromBackend) => {
     const { movieId, nameRU, description, duration, trailerLink, image } =
@@ -34,7 +40,7 @@ const Cards: React.FC = () => {
       );
       if (res.payload) {
         const newMovie = res.payload as MovieFromBackend;
-        dispatch(setFilms([...films, newMovie]));
+        dispatch(setFilms([...userFilms, newMovie]));
       }
     } catch (err: any) {
       alert(`Произошла ошибка при добавлении фильма на сервер ${err.name}`);
@@ -50,6 +56,15 @@ const Cards: React.FC = () => {
     });
   };
 
+  const removeUserFilm = async (movieId: number) => {
+    const res = await dispatch(fetchRemoveMovie(movieId));
+
+    if (res.payload) {
+      const deletedMovie = res.payload as MovieFromBackend;
+      dispatch(removeFilm(deletedMovie.movieId));
+    }
+  }; // Либо дублировать, либо в самой карточке делать, но это трата ресурсов каждый раз создавать функцию, ниче не могу придумать, 3 утра, уже 26 число - ласт дей сдачи, надо хоть что то показать =/
+
   useEffect(() => {
     if (resultFilms && displayedCards >= resultFilms.length) {
       setShowMoreButton(false);
@@ -58,11 +73,32 @@ const Cards: React.FC = () => {
     }
   }, [resultFilms, displayedCards]);
 
+  const getUserFilms = async () => {
+    try {
+      const res = await dispatch(fetchGetUserMovies());
+      if (res.payload) {
+        const userFilms = res.payload as MovieFromBackend[];
+        dispatch(setFilms(userFilms));
+      }
+    } catch (err: any) {
+      alert(
+        `Произошла ошибка при получении фильмов юзака в компоненте Cards ${err.message}`
+      );
+    }
+  }; // Знаю что похожая функция уже есть, но она плотно завязана на поиске, поэтому рентабельнее написать еще одну
+
+  useEffect(() => {
+    getUserFilms();
+  }, []);
+
   return (
     <>
       <div className={styles.container}>
         {resultFilms.length >= 1 ? (
           resultFilms.slice(0, displayedCards).map((card: Film, i: number) => {
+            const isAddedUser = userFilms?.some(
+              (userFilm) => userFilm.nameRU === card.nameRU
+            ); // Тут ломается прила
             return (
               <Card
                 movieId={card.id}
@@ -73,6 +109,8 @@ const Cards: React.FC = () => {
                 trailerLink={card.trailerLink}
                 key={i}
                 addFavoriteMovie={addFavoriteMovie}
+                removeUserFilm={removeUserFilm}
+                isAddedUser={isAddedUser}
               />
             );
           })

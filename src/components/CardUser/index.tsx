@@ -20,7 +20,7 @@ const showButton = displayedData.length > 5; // Проверка количес�
 
 const CardUser: React.FC = () => {
   const dispatch = useAppDispatch();
-  const { films } = useSelector(selectApiData);
+  const { userFilms } = useSelector(selectApiData);
   const { resultFilms } = useSelector(selectFilterData);
 
   const getUserCards = async () => {
@@ -59,8 +59,8 @@ const CardUser: React.FC = () => {
   return (
     <>
       <div className={sharedStyles.container}>
-        {films.length >= 1 ? (
-          films.map((item: MovieFromBackend, i: number) => {
+        {userFilms.length >= 1 ? (
+          userFilms.map((item: MovieFromBackend, i: number) => {
             return (
               <Card
                 movieId={item.movieId}

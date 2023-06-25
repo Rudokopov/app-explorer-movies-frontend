@@ -1,8 +1,7 @@
 import React from "react";
 import styles from "./card.module.scss";
-import { Film } from "../../app/films/types";
 import { convertToHours } from "../../utils/utils";
-import { MovieFromBackend, RemoveMovieParams } from "../../app/api/types";
+import { MovieFromBackend } from "../../app/api/types";
 
 type CardProps = {
   movieId: number;
@@ -12,6 +11,7 @@ type CardProps = {
   trailerLink: string;
   duration: number;
   myFilmsPage?: boolean;
+  isAddedUser?: boolean;
   addFavoriteMovie?: (params: MovieFromBackend) => Promise<void>;
   removeUserFilm?: (i: number) => Promise<void>;
 };
@@ -27,6 +27,7 @@ const Card: React.FC<CardProps> = (props) => {
     myFilmsPage,
     addFavoriteMovie,
     removeUserFilm,
+    isAddedUser,
   } = props;
 
   const handleAddMovie: React.MouseEventHandler<SVGSVGElement> = () => {
@@ -60,7 +61,12 @@ const Card: React.FC<CardProps> = (props) => {
         <h3 className={styles.title}>{nameRU}</h3>
         {!myFilmsPage ? (
           <svg
-            onClick={handleAddMovie}
+            onClick={isAddedUser ? handleRemoveMovie : handleAddMovie}
+            className={
+              isAddedUser
+                ? `${styles.addIcon} ${styles.active}`
+                : `${styles.addIcon}`
+            }
             width="28"
             height="28"
             viewBox="0 0 28 28"

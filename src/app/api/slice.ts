@@ -12,7 +12,7 @@ import {
 } from "./types";
 
 const initialState: ApiSliceState = {
-  films: [],
+  userFilms: [],
   user: {
     token: "",
     _id: "",
@@ -142,7 +142,7 @@ const apiSlice = createSlice({
   initialState,
   reducers: {
     setFilms(state, action: PayloadAction<MovieFromBackend[]>) {
-      state.films = action.payload;
+      state.userFilms = action.payload;
     },
     setUser(state, action: PayloadAction<LoginResponse>) {
       state.user = action.payload;
@@ -152,7 +152,9 @@ const apiSlice = createSlice({
     },
     removeFilm(state, action: PayloadAction<number>) {
       const movieId = action.payload;
-      state.films = state.films.filter((film) => film.movieId !== movieId);
+      state.userFilms = state.userFilms.filter(
+        (film) => film.movieId !== movieId
+      );
     },
   },
 
@@ -198,7 +200,7 @@ const apiSlice = createSlice({
       state.status = Status.LOADING;
     });
     builder.addCase(fetchCreateMovie.fulfilled, (state, action) => {
-      state.films = action.payload;
+      state.userFilms = action.payload;
       state.status = Status.SUCCESS;
     });
     builder.addCase(fetchCreateMovie.rejected, (state) => {
@@ -207,15 +209,15 @@ const apiSlice = createSlice({
 
     // Поулчение фильмов с сервера
     builder.addCase(fetchGetUserMovies.pending, (state) => {
-      state.films = [];
+      state.userFilms = [];
       state.status = Status.LOADING;
     });
     builder.addCase(fetchGetUserMovies.fulfilled, (state, action) => {
-      state.films = action.payload;
+      state.userFilms = action.payload;
       state.status = Status.SUCCESS;
     });
     builder.addCase(fetchGetUserMovies.rejected, (state) => {
-      state.films = [];
+      state.userFilms = [];
       state.status = Status.ERROR;
     });
 
@@ -224,7 +226,7 @@ const apiSlice = createSlice({
       state.status = Status.LOADING;
     });
     builder.addCase(fetchRemoveMovie.fulfilled, (state, action) => {
-      state.films = action.payload;
+      state.userFilms = action.payload;
       state.status = Status.SUCCESS;
     });
     builder.addCase(fetchRemoveMovie.rejected, (state) => {

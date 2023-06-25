@@ -14,13 +14,10 @@ import {
   fetchLogin,
   fetchRegister,
   fetchUser,
-  fetchGetUserMovies,
-  setFilms,
   setLogin,
   setUser,
 } from "../app/api/slice";
-import { LoginParams, LoginResponse, Status, User } from "../app/api/types";
-import { Film } from "../app/films/types";
+import { LoginResponse, Status, User } from "../app/api/types";
 
 export type AuthParams = {
   name?: string;
