@@ -4,6 +4,10 @@
 
 https://drive.google.com/file/d/1pz_49SBWQxA_NCbsmSJWv937jMgBaQSI/view?usp=sharing
 
+## Ссылка на pull request
+
+https://github.com/Rudokopov/app-explorer-movies-frontend/pull/2
+
 ### Инструкция
 
 ---
