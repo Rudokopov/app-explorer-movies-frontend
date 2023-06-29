@@ -68,10 +68,9 @@ const App: React.FC = () => {
           const token = res.payload as LoginResponse;
           console.log(token);
           localStorage.setItem("jwt", token.token);
-          const enter = await dispatch(fetchUser());
-          if (enter) {
-            navigate("/films");
-          }
+          getUser();
+
+          navigate("/films");
         }
       }
     } catch (err: any) {
