@@ -2,6 +2,7 @@ import styles from "./app.module.scss";
 import { useEffect } from "react";
 import Main from "../pages/Main";
 import { Route, Routes, useNavigate } from "react-router";
+import { useLocation } from "react-router-dom";
 import Films from "../pages/Films";
 import Cards from "./Cards";
 import CardUser from "./CardUser";
@@ -18,6 +19,7 @@ import {
   setUser,
 } from "../app/api/slice";
 import { LoginResponse, Status, User } from "../app/api/types";
+import { clearFilterState } from "../app/filters/slice";
 
 export type AuthParams = {
   name?: string;
@@ -28,6 +30,7 @@ export type AuthParams = {
 const App: React.FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const getUser = async () => {
     const res = await dispatch(fetchUser());
@@ -37,6 +40,12 @@ const App: React.FC = () => {
       dispatch(setLogin(true));
     }
   };
+
+  // useEffect(() => {
+  //   if (location.pathname === "/films/saved") {
+  //     dispatch(clearFilterState());
+  //   }
+  // }, [dispatch, location]);
 
   useEffect(() => {
     getUser();

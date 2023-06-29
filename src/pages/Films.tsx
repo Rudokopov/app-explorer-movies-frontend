@@ -1,7 +1,6 @@
-import React, { ReactComponentElement } from "react";
+import React from "react";
 import Header from "../components/Header/Header";
 import Search from "../components/Search/Search";
-import Cards from "../components/Cards";
 import Footer from "../components/Footer/Footer";
 
 type FilmsProps = {
@@ -13,7 +12,6 @@ const Films: React.FC<FilmsProps> = (props) => {
   return (
     <>
       <Header />
-      <Search />
       {children}
       <Footer />
     </>

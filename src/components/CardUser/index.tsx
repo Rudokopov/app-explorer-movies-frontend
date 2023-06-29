@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Card from "../Card";
 import data from "../../cards.json";
 // import { CardData } from "../Cards/Cards";
@@ -13,7 +13,8 @@ import {
 import { MovieFromBackend } from "../../app/api/types";
 import { useSelector } from "react-redux";
 import { selectApiData } from "../../app/api/selectors";
-import { selectFilterData } from "../../app/filters/selectors";
+import Search from "../Search/Search";
+import { selectUserFilterData } from "../../app/userFilterFilms/selectors";
 
 const displayedData = data.slice(0, 3); // Ограничение до 3 элементов
 const showButton = displayedData.length > 5; // Проверка количества отображаемых элементов
@@ -21,27 +22,30 @@ const showButton = displayedData.length > 5; // Проверка количес�
 const CardUser: React.FC = () => {
   const dispatch = useAppDispatch();
   const { userFilms } = useSelector(selectApiData);
-  const { resultFilms } = useSelector(selectFilterData);
+  const { resultFilms } = useSelector(selectUserFilterData);
 
-  const getUserCards = async () => {
-    const res = await dispatch(fetchGetUserMovies());
-    try {
-      if (res.payload) {
-        const userFilms = res.payload as MovieFromBackend[];
-        // dispatch(setFilms(userFilms));
+  const [userDataFilms, setUserDataFilms] = useState<MovieFromBackend[]>([]);
+  // const { resultFilms } = useSelector(selectFilterData);
 
-        // Тут логика для поиска, сравниаем 2 массива, тот который содержит результат поиска и тот который прилетает с фильмами юзака
-        const matchedFilms = userFilms.filter((userFilm) => {
-          return resultFilms.some(
-            (resultFilms) => resultFilms.nameRU === userFilm.nameRU
-          );
-        });
-        dispatch(setFilms(matchedFilms));
-      }
-    } catch (err: any) {
-      alert(`Произошла ошибка при получении фильмов юзера ${err.message}`);
-    }
-  };
+  // const getUserCards = async () => {
+  //   const res = await dispatch(fetchGetUserMovies());
+  //   try {
+  //     if (res.payload) {
+  //       const userFilms = res.payload as MovieFromBackend[];
+  //       // dispatch(setFilms(userFilms));
+
+  //       // Тут логика для поиска, сравниаем 2 массива, тот который содержит результат поиска и тот который прилетает с фильмами юзака
+  //       const matchedFilms = userFilms.filter((userFilm) => {
+  //         return resultFilms.some(
+  //           (resultFilms) => resultFilms.nameRU === userFilm.nameRU
+  //         );
+  //       });
+  //       dispatch(setFilms(matchedFilms));
+  //     }
+  //   } catch (err: any) {
+  //     alert(`Произошла ошибка при получении фильмов юзера ${err.message}`);
+  //   }
+  // };
 
   const removeUserFilm = async (movieId: number) => {
     const res = await dispatch(fetchRemoveMovie(movieId));
@@ -52,15 +56,36 @@ const CardUser: React.FC = () => {
     }
   };
 
+  const getUserFilms = async () => {
+    try {
+      const res = await dispatch(fetchGetUserMovies());
+      if (res.payload) {
+        const userFilms = res.payload as MovieFromBackend[];
+        if (userFilms) {
+          setUserDataFilms(userFilms);
+        }
+      }
+    } catch (err: any) {
+      alert(
+        `Произошла ошибка при получении фильмов пользователя ${err.message}`
+      );
+    }
+  };
+
   useEffect(() => {
-    getUserCards();
+    getUserFilms();
+  }, []);
+
+  useEffect(() => {
+    setUserDataFilms(resultFilms);
   }, [resultFilms]);
 
   return (
     <>
+      <Search />
       <div className={sharedStyles.container}>
-        {userFilms.length >= 1 ? (
-          userFilms.map((item: MovieFromBackend, i: number) => {
+        {userDataFilms.length >= 1 ? (
+          userDataFilms.map((item: MovieFromBackend, i: number) => {
             return (
               <Card
                 movieId={item.movieId}

@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import styles from "./search.module.scss";
 import { debounce, styled, Switch } from "@mui/material";
 import { useAppDispatch } from "../../app/store";
+import { useLocation } from "react-router";
 import {
   clearResultFilms,
   setResultFilms,
@@ -12,6 +13,13 @@ import { fetchFilms } from "../../app/films/slice";
 import { Film } from "../../app/films/types";
 import { useSelector } from "react-redux";
 import { selectFilterData } from "../../app/filters/selectors";
+import {
+  clearUserResultFilms,
+  setUserResultFilms,
+  setUserSearchValue,
+  setUserShortType,
+} from "../../app/userFilterFilms/slice";
+import { fetchGetUserMovies } from "../../app/api/slice";
 import { MovieFromBackend } from "../../app/api/types";
 
 const CustomSwitch = styled(Switch)(({ theme }) => ({
@@ -51,9 +59,14 @@ const CustomSwitch = styled(Switch)(({ theme }) => ({
 
 const Search: React.FC = () => {
   const dispatch = useAppDispatch();
+  const location = useLocation();
   const { searchValue, isShort } = useSelector(selectFilterData);
+
   const [short, setShort] = useState(isShort || false);
   const [value, setValue] = useState<string>(searchValue || "");
+
+  const [savedFilmValue, setSavedFilmValue] = useState<string>("");
+  const [savedFilmIsShort, setSavedFilmIsShort] = useState<boolean>(false);
 
   useEffect(() => {
     dispatch(setShortType(short));
@@ -107,32 +120,115 @@ const Search: React.FC = () => {
     }
   };
 
-  const onSubmit = async (evt: React.FormEvent) => {
+  const onSubmitFilter = async (evt: React.FormEvent) => {
     evt.preventDefault();
     dispatch(clearResultFilms()); // Чищу предыдущий результат
     const res = await getFilms();
     filterFilms(res);
   };
 
+  /* -----------------------------------------Логика для поиска по сохраненным фильмам----------------------------------------------- */
+
+  const onChangeUserInput = (evt: React.ChangeEvent<HTMLInputElement>) => {
+    setSavedFilmValue(evt.target.value);
+    dispatch(setUserSearchValue(savedFilmValue));
+  };
+
+  const handleUserShortParam = () => {
+    savedFilmIsShort ? setSavedFilmIsShort(false) : setSavedFilmIsShort(true);
+  };
+
+  useEffect(() => {
+    dispatch(setUserShortType(savedFilmIsShort));
+  }, [savedFilmIsShort]);
+
+  const filterUserFilms = async () => {
+    const res = await dispatch(fetchGetUserMovies());
+    try {
+      if (res.payload) {
+        const userFilmsData = res.payload as MovieFromBackend[];
+        const filteredFilms = userFilmsData.filter((film: MovieFromBackend) => {
+          const isMatch = film.nameRU
+            .toLowerCase()
+            .includes(savedFilmValue.toLowerCase());
+          const hasValidDuration = film.duration > 40;
+
+          if (savedFilmIsShort) {
+            return isMatch && !hasValidDuration;
+          } else {
+            return isMatch;
+          }
+        });
+        dispatch(setUserResultFilms(filteredFilms));
+      }
+    } catch (err: any) {
+      alert(`Произошла ошибка при получении фильмов юзера ${err.message}`);
+    }
+  };
+
+  const onSubmitUserFilter = async (evt: React.FormEvent) => {
+    evt.preventDefault();
+    dispatch(clearUserResultFilms()); // Чищу предыдущий результат
+    filterUserFilms();
+    // const res = await getUserFilms();
+    // filterFilms(res);
+  };
+
   return (
     <section className={styles.container}>
-      <form onSubmit={onSubmit} className={styles.form} action="submit">
-        <input
-          value={value}
-          onChange={(evt) => onChangeInput(evt)}
-          className={styles.formInput}
-          placeholder="Фильмы"
-          type="text"
-          required
-        />
-        <button className={styles.button} type="submit">
-          Найти
-        </button>
-      </form>
-      <div className={styles.switch}>
-        <CustomSwitch checked={short} onClick={handleShortParam} />
-        <p className={styles.switchDescription}>Короткометражки</p>
-      </div>
+      {location.pathname === "/films" && (
+        <>
+          <form
+            onSubmit={onSubmitFilter}
+            className={styles.form}
+            action="submit"
+          >
+            <input
+              value={value}
+              onChange={(evt) => onChangeInput(evt)}
+              className={styles.formInput}
+              placeholder="Фильмы"
+              type="text"
+              required
+            />
+            <button className={styles.button} type="submit">
+              Найти
+            </button>
+          </form>
+          <div className={styles.switch}>
+            <CustomSwitch checked={short} onClick={handleShortParam} />
+            <p className={styles.switchDescription}>Короткометражки</p>
+          </div>
+        </>
+      )}
+      {location.pathname === "/films/saved" && (
+        <>
+          <form
+            onSubmit={onSubmitUserFilter}
+            className={styles.form}
+            action="submit"
+          >
+            <input
+              value={savedFilmValue}
+              onChange={(evt) => onChangeUserInput(evt)}
+              className={styles.formInput}
+              placeholder="Фильмы"
+              type="text"
+              required
+            />
+            <button className={styles.button} type="submit">
+              Найти
+            </button>
+          </form>
+          <div className={styles.switch}>
+            <CustomSwitch
+              checked={savedFilmIsShort}
+              onClick={handleUserShortParam}
+            />
+            <p className={styles.switchDescription}>Короткометражки</p>
+          </div>
+        </>
+      )}
     </section>
   );
 };
