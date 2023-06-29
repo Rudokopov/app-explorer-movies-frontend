@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import logo from "../../images/logo.svg";
 import styles from "./submitform.module.scss";
 import { Link } from "react-router-dom";
@@ -22,6 +22,19 @@ const UserForm: React.FC<UserFormProps> = (props) => {
   const [password, setPassword] = useState<string>("");
   const [emailError, setEmailError] = useState<string>("");
   const [passwordError, setPasswordError] = useState<string>("");
+  const [isValid, setValid] = useState<boolean>(true);
+
+  useEffect(() => {
+    const isFormValid = () => {
+      if (formType === "reg") {
+        return !!(name && email && password && !emailError && !passwordError);
+      } else {
+        return !!(email && password && !emailError && !passwordError);
+      }
+    };
+
+    setValid(!isFormValid());
+  }, [name, email, password, emailError, passwordError, formType]);
 
   const validateEmail = (value: string) => {
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -41,7 +54,8 @@ const UserForm: React.FC<UserFormProps> = (props) => {
   };
 
   const onChangeName = (evt: React.ChangeEvent<HTMLInputElement>) => {
-    if (evt.target.value.includes(" ")) {
+    if (evt.target.value.charAt(0) === " ") {
+      alert("Первый символ не может быть пробелом");
       return;
     }
     setName(evt.target.value);
@@ -53,9 +67,11 @@ const UserForm: React.FC<UserFormProps> = (props) => {
   };
 
   const onChangePassword = (evt: React.ChangeEvent<HTMLInputElement>) => {
-    if (evt.target.value.includes(" ")) {
+    if (evt.target.value.charAt(0) === " ") {
+      alert("Первый символ не может быть пробелом");
       return;
     }
+
     setPassword(evt.target.value);
     validatePassword(evt.target.value);
   };
@@ -77,9 +93,6 @@ const UserForm: React.FC<UserFormProps> = (props) => {
     if (Status.SUCCESS) {
       reseter();
     }
-    // if (Status.ERROR) {
-    //   alert(`Произошла ошибка, попробуйте войти позже`);
-    // } // херово работает, временно отключил
   };
 
   return (
@@ -149,7 +162,11 @@ const UserForm: React.FC<UserFormProps> = (props) => {
           </fieldset>
 
           <div className={styles.tools}>
-            <button className={styles.toolsSubmit} type="submit">
+            <button
+              className={styles.toolsSubmit}
+              disabled={isValid}
+              type="submit"
+            >
               {btnTitle}
             </button>
             {formType === "auth" ? (

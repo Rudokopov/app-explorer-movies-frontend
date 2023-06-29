@@ -25,20 +25,30 @@ const UserInfo: React.FC = () => {
     if (!emailPattern.test(value)) {
       setEmailError("Некорректный формат электронной почты");
       setCorrect(true);
-    } else {
-      setCorrect(false);
-      setEmailError("");
+      return;
     }
+    if (value === user.email) {
+      setCorrect(true);
+      return;
+    }
+
+    setCorrect(false);
+    setEmailError("");
   };
 
   const validateName = (value: string) => {
     if (value.length < 2) {
       setNameError("Имя не может быть короче двух символов");
       setCorrect(true);
-    } else {
-      setCorrect(false);
-      setNameError("");
+      return;
     }
+    if (value === user.name) {
+      setCorrect(true);
+      return;
+    }
+
+    setCorrect(false);
+    setNameError("");
   };
 
   useEffect(() => {
@@ -72,6 +82,7 @@ const UserInfo: React.FC = () => {
       if (currentUser) {
         dispatch(setUser(currentUser));
         setCorrect(true);
+        alert(`Информация успешно обновлена!`);
       }
     } catch (err: any) {
       alert(

@@ -66,7 +66,6 @@ const App: React.FC = () => {
         if (res && Status.SUCCESS) {
           alert(`Вы успешно зарегестрировались!`);
           const token = res.payload as LoginResponse;
-          console.log(token);
           localStorage.setItem("jwt", token.token);
           getUser();
 

@@ -136,6 +136,18 @@
       padding: 15px 68px;
       font-size: 12px;
     }
+    &:disabled {
+      opacity: 0.2;
+      cursor: not-allowed;
+
+      &:focus {
+        border: none;
+      }
+
+      &:hover {
+        opacity: 0.2;
+      }
+    }
   }
 
   &Paragraph {
