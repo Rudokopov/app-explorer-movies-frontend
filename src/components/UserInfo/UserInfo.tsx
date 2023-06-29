@@ -7,6 +7,7 @@ import { fetchUserUpdate, setLogin, setUser } from "../../app/api/slice";
 import { useSelector } from "react-redux";
 import { selectApiData } from "../../app/api/selectors";
 import { User } from "../../app/api/types";
+import { clearFilterState } from "../../app/filters/slice";
 
 const UserInfo: React.FC = () => {
   const navigate = useNavigate();
@@ -82,6 +83,7 @@ const UserInfo: React.FC = () => {
   const signOut = () => {
     localStorage.removeItem("jwt");
     dispatch(setLogin(false));
+    dispatch(clearFilterState());
     navigate("/", { replace: true });
   };
   return (

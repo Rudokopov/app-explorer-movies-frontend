@@ -1,13 +1,11 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Film } from "../films/types";
 import { FilterSliceState } from "./types";
-import { persistReducer } from "redux-persist";
-import storage from "redux-persist/lib/storage";
 
 const initialState: FilterSliceState = {
-  resultFilms: [],
-  searchValue: "",
-  isShort: false,
+  resultFilms: JSON.parse(localStorage.getItem("resultFilms") || "[]"),
+  searchValue: localStorage.getItem("searchValue") || "",
+  isShort: localStorage.getItem("isShort") === "true" || false,
 };
 
 const filterSlice = createSlice({
@@ -16,15 +14,27 @@ const filterSlice = createSlice({
   reducers: {
     setResultFilms(state, action: PayloadAction<Film[]>) {
       state.resultFilms = action.payload;
+      localStorage.setItem("resultFilms", JSON.stringify(action.payload));
     },
     setSearchValue(state, action: PayloadAction<string>) {
       state.searchValue = action.payload;
+      localStorage.setItem("searchValue", action.payload);
     },
     setShortType(state, action: PayloadAction<boolean>) {
       state.isShort = action.payload;
+      localStorage.setItem("isShort", action.payload.toString());
     },
     clearResultFilms(state) {
       state.resultFilms = [];
+      localStorage.removeItem("resultFilms");
+    },
+    clearFilterState(state) {
+      state.resultFilms = [];
+      state.searchValue = "";
+      state.isShort = false;
+      localStorage.removeItem("resultFilms");
+      localStorage.removeItem("searchValue");
+      localStorage.removeItem("isShort");
     },
   },
 });
@@ -34,11 +44,7 @@ export const {
   setSearchValue,
   setShortType,
   clearResultFilms,
+  clearFilterState,
 } = filterSlice.actions;
 
-const persistConfig = {
-  key: "filter",
-  storage,
-};
-
-export default persistReducer(persistConfig, filterSlice.reducer);
+export default filterSlice.reducer;

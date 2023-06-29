@@ -1,22 +1,21 @@
-import { configureStore } from "@reduxjs/toolkit";
-import film from "./films/slice";
-import filter from "./filters/slice";
-import api from "./api/slice";
+import { combineReducers, configureStore } from "@reduxjs/toolkit";
+import filmReducer from "./films/slice";
+import filterReducer from "./filters/slice";
+import apiReducer from "./api/slice";
 import { useDispatch } from "react-redux";
-import { persistStore } from "redux-persist";
 
-export const store = configureStore({
-  reducer: { film, filter, api },
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware({
-      serializableCheck: false,
-    }),
+const rootReducer = combineReducers({
+  film: filmReducer,
+  filter: filterReducer,
+  api: apiReducer,
 });
 
-export const persistor = persistStore(store);
+export const store = configureStore({
+  reducer: rootReducer,
+});
 
-type FuncType = typeof store.getState;
-export type RootState = ReturnType<FuncType>;
-
-type AppDispatch = typeof store.dispatch;
+export type RootState = ReturnType<typeof rootReducer>;
+export type AppDispatch = typeof store.dispatch;
 export const useAppDispatch = () => useDispatch<AppDispatch>();
+
+export default store;
