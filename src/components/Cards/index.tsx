@@ -15,7 +15,6 @@ import {
 import { useAppDispatch } from "../../app/store";
 import { MovieFromBackend } from "../../app/api/types";
 import { selectApiData } from "../../app/api/selectors";
-import Search from "../Search/Search";
 
 const Cards: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -95,7 +94,6 @@ const Cards: React.FC = () => {
 
   return (
     <>
-      <Search />
       <div className={styles.container}>
         {resultFilms.length >= 1 ? (
           resultFilms.slice(0, displayedCards).map((card: Film, i: number) => {

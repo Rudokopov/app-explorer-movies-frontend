@@ -68,6 +68,26 @@ const Search: React.FC = () => {
   const [savedFilmValue, setSavedFilmValue] = useState<string>("");
   const [savedFilmIsShort, setSavedFilmIsShort] = useState<boolean>(false);
 
+  const validateSearchInput = (value: string) => {
+    if (value.length <= 0) {
+      alert(`Введите ключевое слово что бы начать поиск`);
+      return false;
+    }
+
+    const regex = /^[a-zA-Zа-яА-Я0-9\s]+$/;
+
+    if (!regex.test(value)) {
+      alert(`Ключевое слово может содержать только цифры и буквы`);
+      return false;
+    }
+
+    if (value.charAt(0) === " ") {
+      alert("Первый символ не может быть пробелом");
+      return false;
+    }
+    return true;
+  };
+
   useEffect(() => {
     dispatch(setShortType(short));
   }, [short]);
@@ -122,9 +142,11 @@ const Search: React.FC = () => {
 
   const onSubmitFilter = async (evt: React.FormEvent) => {
     evt.preventDefault();
-    dispatch(clearResultFilms()); // Чищу предыдущий результат
-    const res = await getFilms();
-    filterFilms(res);
+    if (validateSearchInput(value)) {
+      dispatch(clearResultFilms()); // Чищу предыдущий результат
+      const res = await getFilms();
+      filterFilms(res);
+    }
   };
 
   /* -----------------------------------------Логика для поиска по сохраненным фильмам----------------------------------------------- */
@@ -168,10 +190,10 @@ const Search: React.FC = () => {
 
   const onSubmitUserFilter = async (evt: React.FormEvent) => {
     evt.preventDefault();
-    dispatch(clearUserResultFilms()); // Чищу предыдущий результат
-    filterUserFilms();
-    // const res = await getUserFilms();
-    // filterFilms(res);
+    if (validateSearchInput(savedFilmValue)) {
+      dispatch(clearUserResultFilms());
+      filterUserFilms();
+    }
   };
 
   return (
@@ -189,7 +211,6 @@ const Search: React.FC = () => {
               className={styles.formInput}
               placeholder="Фильмы"
               type="text"
-              required
             />
             <button className={styles.button} type="submit">
               Найти
@@ -214,7 +235,6 @@ const Search: React.FC = () => {
               className={styles.formInput}
               placeholder="Фильмы"
               type="text"
-              required
             />
             <button className={styles.button} type="submit">
               Найти

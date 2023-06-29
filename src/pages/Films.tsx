@@ -12,6 +12,7 @@ const Films: React.FC<FilmsProps> = (props) => {
   return (
     <>
       <Header />
+      <Search />
       {children}
       <Footer />
     </>

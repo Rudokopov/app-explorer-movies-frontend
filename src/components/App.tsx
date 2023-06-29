@@ -30,7 +30,6 @@ export type AuthParams = {
 const App: React.FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const location = useLocation();
 
   const getUser = async () => {
     const res = await dispatch(fetchUser());
@@ -40,12 +39,6 @@ const App: React.FC = () => {
       dispatch(setLogin(true));
     }
   };
-
-  // useEffect(() => {
-  //   if (location.pathname === "/films/saved") {
-  //     dispatch(clearFilterState());
-  //   }
-  // }, [dispatch, location]);
 
   useEffect(() => {
     getUser();
@@ -57,6 +50,8 @@ const App: React.FC = () => {
       const token = res.payload as LoginResponse;
       localStorage.setItem("jwt", token.token);
       navigate("/");
+    } else {
+      localStorage.removeItem("jwt");
     }
   };
 
@@ -70,7 +65,13 @@ const App: React.FC = () => {
         const res = await dispatch(fetchRegister({ name, email, password }));
         if (res && Status.SUCCESS) {
           alert(`Вы успешно зарегестрировались!`);
-          navigate("/signin");
+          const token = res.payload as LoginResponse;
+          console.log(token);
+          localStorage.setItem("jwt", token.token);
+          const enter = await dispatch(fetchUser());
+          if (enter) {
+            navigate("/films");
+          }
         }
       }
     } catch (err: any) {
