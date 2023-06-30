@@ -22,8 +22,7 @@ import { Status } from "../../app/filters/types";
 const Cards: React.FC = () => {
   const dispatch = useAppDispatch();
   const windowParam = useResize();
-  const { resultFilms, searchValue, filterStatus } =
-    useSelector(selectFilterData);
+  const { resultFilms, filterStatus } = useSelector(selectFilterData);
   const [displayedCards, setDisplayedCards] = useState(12);
   const [showMoreButton, setShowMoreButton] = useState(true);
   const { userFilms } = useSelector(selectApiData);
@@ -76,6 +75,15 @@ const Cards: React.FC = () => {
       alert(`Произошла ошибка при удалении фильма ${err.message}`);
     }
   };
+
+  useEffect(() => {
+    setDisplayedCards((prevCount) => {
+      if (!windowParam.isScreenMd) {
+        return prevCount - 4;
+      }
+      return prevCount;
+    });
+  }, []);
 
   useEffect(() => {
     if (resultFilms && displayedCards >= resultFilms.length) {
@@ -134,14 +142,6 @@ const Cards: React.FC = () => {
                 Введите ключевое слово для поиска
               </h2>
             )}
-            {/* {searchValue.length === 0 && resultFilms.length >= 0 && (
-              <h2 className={styles.badRequest}>
-                Введите ключевое слово для поиска
-              </h2>
-            )}
-            {resultFilms.length >= 0 && searchValue.length > 0 && (
-              <h2 className={styles.badRequest}>Ничего не найдено</h2>
-            )} */}
           </>
         )}
       </div>
