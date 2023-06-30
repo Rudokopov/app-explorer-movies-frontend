@@ -8,7 +8,7 @@ import {
   fetchRemoveMovie,
   removeFilm,
 } from "../../app/api/slice";
-import { MovieFromBackend } from "../../app/api/types";
+import { MovieFromBackend, Status } from "../../app/api/types";
 import { useSelector } from "react-redux";
 import { selectUserFilterData } from "../../app/userFilterFilms/selectors";
 
@@ -18,7 +18,6 @@ const showButton = displayedData.length > 5; // Проверка количес�
 const CardUser: React.FC = () => {
   const dispatch = useAppDispatch();
   const { resultFilms } = useSelector(selectUserFilterData);
-
   const [userDataFilms, setUserDataFilms] = useState<MovieFromBackend[]>([]);
 
   const removeUserFilm = async (movieId: number) => {

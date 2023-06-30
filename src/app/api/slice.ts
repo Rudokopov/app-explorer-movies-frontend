@@ -162,6 +162,9 @@ const apiSlice = createSlice({
     setLogin(state, action: PayloadAction<boolean>) {
       state.isLogin = action.payload;
     },
+    setStatus(state, action: PayloadAction<Status>) {
+      state.status = action.payload;
+    },
     removeFilm(state, action: PayloadAction<number>) {
       const movieId = action.payload;
       state.userFilms = state.userFilms.filter(
@@ -246,5 +249,6 @@ const apiSlice = createSlice({
     });
   },
 });
-export const { setFilms, setLogin, setUser, removeFilm } = apiSlice.actions;
+export const { setFilms, setLogin, setUser, removeFilm, setStatus } =
+  apiSlice.actions;
 export default apiSlice.reducer;

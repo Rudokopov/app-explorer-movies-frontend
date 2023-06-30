@@ -19,8 +19,9 @@ import {
   setUserSearchValue,
   setUserShortType,
 } from "../../app/userFilterFilms/slice";
-import { fetchGetUserMovies } from "../../app/api/slice";
-import { MovieFromBackend } from "../../app/api/types";
+import { fetchGetUserMovies, setStatus } from "../../app/api/slice";
+import { MovieFromBackend, Status } from "../../app/api/types";
+import { selectFilmData } from "../../app/films/selectors";
 
 const CustomSwitch = styled(Switch)(({ theme }) => ({
   width: 36,
@@ -62,7 +63,7 @@ const Search: React.FC = () => {
   const location = useLocation();
   const { searchValue, isShort } = useSelector(selectFilterData);
 
-  const [short, setShort] = useState(isShort || false);
+  const [short, setShort] = useState<boolean>(isShort || false);
   const [value, setValue] = useState<string>(searchValue || "");
 
   const [savedFilmValue, setSavedFilmValue] = useState<string>("");
@@ -70,7 +71,7 @@ const Search: React.FC = () => {
 
   const validateSearchInput = (value: string) => {
     if (value.length <= 0) {
-      alert(`Введите ключевое слово что бы начать поиск`);
+      alert(`Введите ключевое слово, чтобы начать поиск`);
       return false;
     }
 
@@ -90,38 +91,45 @@ const Search: React.FC = () => {
 
   useEffect(() => {
     dispatch(setShortType(short));
+  }, [dispatch, short]);
+
+  useEffect(() => {
+    filterFilms();
   }, [short]);
 
   const updateSearchValue = useCallback(
     debounce((str: string) => {
       dispatch(setSearchValue(str));
     }, 800),
-    []
-  ); // Сделал что бы снять лишнюю нагрузку на апдейт редакса и в дальнейшем если логику придется прикрутить к поиску на сервере, не спамилось слишком много запросов
+    [dispatch]
+  );
 
   const onChangeInput = (evt: React.ChangeEvent<HTMLInputElement>) => {
-    setValue(evt.target.value);
-    updateSearchValue(evt.target.value);
+    const inputValue = evt.target.value;
+    setValue(inputValue);
+    updateSearchValue(inputValue);
   };
 
   const handleShortParam = () => {
-    short ? setShort(false) : setShort(true);
+    setShort((prevShort) => !prevShort);
   };
 
   const getFilms = useCallback(async () => {
     try {
-      const films = await dispatch(fetchFilms());
-      const result = films.payload as Film[];
-      return result;
+      const response = await dispatch(fetchFilms());
+      const films = response.payload as Film[];
+      return films;
     } catch (err: any) {
       alert(`Произошла ошибка при получении фильмов ${err.message}`);
+      return [];
     }
-  }, []);
+  }, [dispatch]);
 
-  const filterFilms = (filmData: Film[] | undefined) => {
+  const filterFilms = async () => {
     try {
-      if (filmData) {
-        const filteredFilms = filmData.filter((film: Film) => {
+      const films = await getFilms();
+      if (films) {
+        const filteredFilms = films.filter((film: Film) => {
           const isMatch = film.nameRU
             .toLowerCase()
             .includes(value.toLowerCase());
@@ -142,33 +150,39 @@ const Search: React.FC = () => {
 
   const onSubmitFilter = async (evt: React.FormEvent) => {
     evt.preventDefault();
+    dispatch(setStatus(Status.LOADING));
     if (validateSearchInput(value)) {
-      dispatch(clearResultFilms()); // Чищу предыдущий результат
-      const res = await getFilms();
-      filterFilms(res);
+      dispatch(clearResultFilms());
+      filterFilms();
     }
+    dispatch(setStatus(Status.SUCCESS));
   };
 
   /* -----------------------------------------Логика для поиска по сохраненным фильмам----------------------------------------------- */
 
+  useEffect(() => {
+    filterUserFilms();
+  }, [savedFilmIsShort]);
+
   const onChangeUserInput = (evt: React.ChangeEvent<HTMLInputElement>) => {
-    setSavedFilmValue(evt.target.value);
-    dispatch(setUserSearchValue(savedFilmValue));
+    const userInputValue = evt.target.value;
+    setSavedFilmValue(userInputValue);
+    dispatch(setUserSearchValue(userInputValue));
   };
 
   const handleUserShortParam = () => {
-    savedFilmIsShort ? setSavedFilmIsShort(false) : setSavedFilmIsShort(true);
+    setSavedFilmIsShort((prevSavedFilmIsShort) => !prevSavedFilmIsShort);
   };
 
   useEffect(() => {
     dispatch(setUserShortType(savedFilmIsShort));
-  }, [savedFilmIsShort]);
+  }, [dispatch, savedFilmIsShort]);
 
-  const filterUserFilms = async () => {
-    const res = await dispatch(fetchGetUserMovies());
+  const filterUserFilms = useCallback(async () => {
     try {
-      if (res.payload) {
-        const userFilmsData = res.payload as MovieFromBackend[];
+      const response = await dispatch(fetchGetUserMovies());
+      if (response.payload) {
+        const userFilmsData = response.payload as MovieFromBackend[];
         const filteredFilms = userFilmsData.filter((film: MovieFromBackend) => {
           const isMatch = film.nameRU
             .toLowerCase()
@@ -186,13 +200,13 @@ const Search: React.FC = () => {
     } catch (err: any) {
       alert(`Произошла ошибка при получении фильмов юзера ${err.message}`);
     }
-  };
+  }, [dispatch, savedFilmIsShort, savedFilmValue]);
 
   const onSubmitUserFilter = async (evt: React.FormEvent) => {
     evt.preventDefault();
     if (validateSearchInput(savedFilmValue)) {
       dispatch(clearUserResultFilms());
-      filterUserFilms();
+      await filterUserFilms();
     }
   };
 
@@ -207,7 +221,7 @@ const Search: React.FC = () => {
           >
             <input
               value={value}
-              onChange={(evt) => onChangeInput(evt)}
+              onChange={onChangeInput}
               className={styles.formInput}
               placeholder="Фильмы"
               type="text"
@@ -231,7 +245,7 @@ const Search: React.FC = () => {
           >
             <input
               value={savedFilmValue}
-              onChange={(evt) => onChangeUserInput(evt)}
+              onChange={onChangeUserInput}
               className={styles.formInput}
               placeholder="Фильмы"
               type="text"
