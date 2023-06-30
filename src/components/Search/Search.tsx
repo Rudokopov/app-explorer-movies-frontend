@@ -5,6 +5,7 @@ import { useAppDispatch } from "../../app/store";
 import { useLocation } from "react-router";
 import {
   clearResultFilms,
+  setFilterStatus,
   setResultFilms,
   setSearchValue,
   setShortType,
@@ -19,9 +20,8 @@ import {
   setUserSearchValue,
   setUserShortType,
 } from "../../app/userFilterFilms/slice";
-import { fetchGetUserMovies, setStatus } from "../../app/api/slice";
+import { fetchGetUserMovies } from "../../app/api/slice";
 import { MovieFromBackend, Status } from "../../app/api/types";
-import { selectFilmData } from "../../app/films/selectors";
 
 const CustomSwitch = styled(Switch)(({ theme }) => ({
   width: 36,
@@ -61,7 +61,7 @@ const CustomSwitch = styled(Switch)(({ theme }) => ({
 const Search: React.FC = () => {
   const dispatch = useAppDispatch();
   const location = useLocation();
-  const { searchValue, isShort } = useSelector(selectFilterData);
+  const { searchValue, isShort, resultFilms } = useSelector(selectFilterData);
 
   const [short, setShort] = useState<boolean>(isShort || false);
   const [value, setValue] = useState<string>(searchValue || "");
@@ -69,9 +69,12 @@ const Search: React.FC = () => {
   const [savedFilmValue, setSavedFilmValue] = useState<string>("");
   const [savedFilmIsShort, setSavedFilmIsShort] = useState<boolean>(false);
 
+  const [searchValid, setSearchValid] = useState<boolean>(false);
+
   const validateSearchInput = (value: string) => {
     if (value.length <= 0) {
       alert(`Введите ключевое слово, чтобы начать поиск`);
+      setSearchValid(false);
       return false;
     }
 
@@ -79,13 +82,16 @@ const Search: React.FC = () => {
 
     if (!regex.test(value)) {
       alert(`Ключевое слово может содержать только цифры и буквы`);
+      setSearchValid(false);
       return false;
     }
 
     if (value.charAt(0) === " ") {
       alert("Первый символ не может быть пробелом");
+      setSearchValid(false);
       return false;
     }
+    setSearchValid(true);
     return true;
   };
 
@@ -94,12 +100,15 @@ const Search: React.FC = () => {
   }, [dispatch, short]);
 
   useEffect(() => {
-    filterFilms();
+    if (searchValid) {
+      filterFilms();
+    }
   }, [short]);
 
   const updateSearchValue = useCallback(
     debounce((str: string) => {
       dispatch(setSearchValue(str));
+      validateSearchInput(str);
     }, 800),
     [dispatch]
   );
@@ -127,6 +136,7 @@ const Search: React.FC = () => {
 
   const filterFilms = async () => {
     try {
+      dispatch(setFilterStatus(Status.LOADING));
       const films = await getFilms();
       if (films) {
         const filteredFilms = films.filter((film: Film) => {
@@ -142,6 +152,10 @@ const Search: React.FC = () => {
           }
         });
         dispatch(setResultFilms(filteredFilms));
+        dispatch(setFilterStatus(Status.SUCCESS));
+        if (filteredFilms.length <= 0) {
+          dispatch(setFilterStatus(Status.ERROR)); // Импровизированная проверка для отображения пейлоудера на клиенте
+        }
       }
     } catch (err: any) {
       alert(`Произошла ошибка при поиске фильмов ${err.message}`);
@@ -150,12 +164,10 @@ const Search: React.FC = () => {
 
   const onSubmitFilter = async (evt: React.FormEvent) => {
     evt.preventDefault();
-    dispatch(setStatus(Status.LOADING));
     if (validateSearchInput(value)) {
       dispatch(clearResultFilms());
       filterFilms();
     }
-    dispatch(setStatus(Status.SUCCESS));
   };
 
   /* -----------------------------------------Логика для поиска по сохраненным фильмам----------------------------------------------- */

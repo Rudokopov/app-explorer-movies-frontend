@@ -15,11 +15,15 @@ import {
 import { useAppDispatch } from "../../app/store";
 import { MovieFromBackend } from "../../app/api/types";
 import { selectApiData } from "../../app/api/selectors";
+import Loaded from "../Loader/Loader";
+import { setFilterStatus } from "../../app/filters/slice";
+import { Status } from "../../app/filters/types";
 
 const Cards: React.FC = () => {
   const dispatch = useAppDispatch();
   const windowParam = useResize();
-  const { resultFilms } = useSelector(selectFilterData);
+  const { resultFilms, searchValue, filterStatus } =
+    useSelector(selectFilterData);
   const [displayedCards, setDisplayedCards] = useState(12);
   const [showMoreButton, setShowMoreButton] = useState(true);
   const { userFilms } = useSelector(selectApiData);
@@ -58,17 +62,20 @@ const Cards: React.FC = () => {
   };
 
   const removeUserFilm = async (movieId: number) => {
+    dispatch(setFilterStatus(Status.LOADING));
     try {
       const res = await dispatch(fetchRemoveMovie(movieId));
 
       if (res.payload) {
         const deletedMovie = res.payload as MovieFromBackend;
         dispatch(removeFilm(deletedMovie.movieId));
+        dispatch(setFilterStatus(Status.SUCCESS));
       }
     } catch (err: any) {
+      dispatch(setFilterStatus(Status.ERROR));
       alert(`Произошла ошибка при удалении фильма ${err.message}`);
     }
-  }; // Либо дублировать, либо в самой карточке делать, но это трата ресурсов каждый раз создавать функцию
+  };
 
   useEffect(() => {
     if (resultFilms && displayedCards >= resultFilms.length) {
@@ -86,7 +93,7 @@ const Cards: React.FC = () => {
         `Произошла ошибка при получении фильмов юзака в компоненте Cards ${err.message}`
       );
     }
-  }, [dispatch]); // Знаю что похожая функция уже есть, но она плотно завязана на поиске, поэтому рентабельнее написать еще одну
+  }, [dispatch]);
 
   useEffect(() => {
     getUserFilms();
@@ -117,7 +124,25 @@ const Cards: React.FC = () => {
             );
           })
         ) : (
-          <h2 className={styles.badRequest}>Ничего не найдено</h2>
+          <>
+            {filterStatus === "loading" && <Loaded />}
+            {filterStatus === "error" && (
+              <h2 className={styles.badRequest}>Ничего не найдено</h2>
+            )}
+            {filterStatus === "firstTime" && (
+              <h2 className={styles.badRequest}>
+                Введите ключевое слово для поиска
+              </h2>
+            )}
+            {/* {searchValue.length === 0 && resultFilms.length >= 0 && (
+              <h2 className={styles.badRequest}>
+                Введите ключевое слово для поиска
+              </h2>
+            )}
+            {resultFilms.length >= 0 && searchValue.length > 0 && (
+              <h2 className={styles.badRequest}>Ничего не найдено</h2>
+            )} */}
+          </>
         )}
       </div>
       <div className={styles.buttonContainer}>

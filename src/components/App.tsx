@@ -65,7 +65,7 @@ const App: React.FC = () => {
     try {
       if (name) {
         const res = await dispatch(fetchRegister({ name, email, password }));
-        if (res && Status.SUCCESS) {
+        if (res && status === "success") {
           alert(`Вы успешно зарегестрировались!`);
           const token = res.payload as LoginResponse;
           localStorage.setItem("jwt", token.token);
@@ -81,7 +81,6 @@ const App: React.FC = () => {
 
   return (
     <main className={styles.container}>
-      {status === "loading" && <Loaded />}
       <Routes>
         <Route path="/" element={<Main />} />
         <Route path="/me" element={<UserPage />} />
