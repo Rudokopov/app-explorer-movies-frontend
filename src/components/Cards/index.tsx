@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import Card from "../Card";
 import styles from "./cards.module.scss";
 import { useSelector } from "react-redux";
@@ -22,11 +22,16 @@ import { Status } from "../../app/filters/types";
 const Cards: React.FC = () => {
   const dispatch = useAppDispatch();
   const windowParam = useResize();
-  const { resultFilms, filterStatus } = useSelector(selectFilterData);
+  const { filterStatus } = useSelector(selectFilterData);
+
   const [displayedCards, setDisplayedCards] = useState(12);
   const [showMoreButton, setShowMoreButton] = useState(true);
   const { userFilms } = useSelector(selectApiData);
-
+  const { resultFilms } = useSelector(selectFilterData);
+  const displayedFilms = useMemo(
+    () => resultFilms.slice(0, displayedCards),
+    [resultFilms, displayedCards]
+  );
   const addFavoriteMovie = async (params: MovieFromBackend) => {
     const { movieId, nameRU, description, duration, trailerLink, image } =
       params;
@@ -44,7 +49,6 @@ const Cards: React.FC = () => {
       if (res.payload) {
         const newMovie = res.payload as MovieFromBackend;
         dispatch(setFilms([...userFilms, newMovie]));
-        // getUserFilms();
       }
     } catch (err: any) {
       alert(`Произошла ошибка при добавлении фильма на сервер ${err.name}`);
@@ -93,25 +97,11 @@ const Cards: React.FC = () => {
     }
   }, [resultFilms, displayedCards]);
 
-  const getUserFilms = useCallback(async () => {
-    try {
-      await dispatch(fetchGetUserMovies());
-    } catch (err: any) {
-      alert(
-        `Произошла ошибка при получении фильмов юзака в компоненте Cards ${err.message}`
-      );
-    }
-  }, [dispatch]);
-
-  useEffect(() => {
-    getUserFilms();
-  }, [getUserFilms]);
-
   return (
     <>
       <div className={styles.container}>
         {resultFilms.length >= 1 ? (
-          resultFilms.slice(0, displayedCards).map((card: Film, i: number) => {
+          displayedFilms.map((card: Film, i: number) => {
             const isAddedUser =
               Array.isArray(userFilms) &&
               userFilms.some((userFilm) => userFilm.nameRU === card.nameRU);

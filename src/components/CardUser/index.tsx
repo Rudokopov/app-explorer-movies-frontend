@@ -8,16 +8,19 @@ import {
   fetchRemoveMovie,
   removeFilm,
 } from "../../app/api/slice";
-import { MovieFromBackend, Status } from "../../app/api/types";
+import { MovieFromBackend } from "../../app/api/types";
 import { useSelector } from "react-redux";
 import { selectUserFilterData } from "../../app/userFilterFilms/selectors";
+import { setStatus } from "../../app/userFilterFilms/slice";
+import { Status } from "../../app/userFilterFilms/types";
+import Loaded from "../Loader/Loader";
 
 const displayedData = data.slice(0, 3); // Ограничение до 3 элементов
 const showButton = displayedData.length > 5; // Проверка количества отображаемых элементов
 
 const CardUser: React.FC = () => {
   const dispatch = useAppDispatch();
-  const { resultFilms } = useSelector(selectUserFilterData);
+  const { resultFilms, status } = useSelector(selectUserFilterData);
   const [userDataFilms, setUserDataFilms] = useState<MovieFromBackend[]>([]);
 
   const removeUserFilm = async (movieId: number) => {
@@ -31,12 +34,14 @@ const CardUser: React.FC = () => {
   };
 
   const getUserFilms = async () => {
+    dispatch(setStatus(Status.LOADING));
     try {
       const res = await dispatch(fetchGetUserMovies());
       if (res.payload) {
         const userFilms = res.payload as MovieFromBackend[];
         if (userFilms) {
           setUserDataFilms(userFilms);
+          dispatch(setStatus(Status.SUCCESS));
         }
       }
     } catch (err: any) {
@@ -56,27 +61,34 @@ const CardUser: React.FC = () => {
 
   return (
     <>
-      <div className={sharedStyles.container}>
-        {userDataFilms.length >= 1 ? (
-          userDataFilms.map((item: MovieFromBackend, i: number) => {
-            return (
-              <Card
-                movieId={item.movieId}
-                nameRU={item.nameRU}
-                description={item.description}
-                duration={item.duration}
-                trailerLink={item.trailerLink}
-                image={item.image}
-                key={i}
-                myFilmsPage
-                removeUserFilm={removeUserFilm}
-              />
-            );
-          })
-        ) : (
-          <h2 className={sharedStyles.badRequest}>Ничего не найдено</h2>
-        )}
-      </div>
+      {status === "loading" ? (
+        <Loaded />
+      ) : (
+        <div className={sharedStyles.container}>
+          {userDataFilms.length >= 1 ? (
+            userDataFilms.map((item: MovieFromBackend, i: number) => {
+              return (
+                <Card
+                  movieId={item.movieId}
+                  nameRU={item.nameRU}
+                  description={item.description}
+                  duration={item.duration}
+                  trailerLink={item.trailerLink}
+                  image={item.image}
+                  key={i}
+                  myFilmsPage
+                  removeUserFilm={removeUserFilm}
+                />
+              );
+            })
+          ) : (
+            <>
+              <h2 className={sharedStyles.badRequest}>Ничего не найдено</h2>
+            </>
+          )}
+        </div>
+      )}
+
       <div
         className={`${sharedStyles.buttonContainer} ${
           showButton ? "" : sharedStyles.hidden

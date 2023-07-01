@@ -1,17 +1,21 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { FilterSliceState } from "./types";
+import { FilterSliceState, Status } from "./types";
 import { MovieFromBackend } from "../api/types";
 
 const initialState: FilterSliceState = {
   resultFilms: JSON.parse(localStorage.getItem("userResultFilms") || "[]"),
   searchValue: localStorage.getItem("userSearchValue") || "",
   isShort: localStorage.getItem("userStateIsShort") === "true" || false,
+  status: Status.SUCCESS,
 };
 
 const userFilterSlice = createSlice({
   name: "userFilterFilms",
   initialState,
   reducers: {
+    setStatus(state, action: PayloadAction<Status>) {
+      state.status = action.payload;
+    },
     setUserResultFilms(state, action: PayloadAction<MovieFromBackend[]>) {
       state.resultFilms = action.payload;
     },
@@ -32,6 +36,7 @@ export const {
   setUserSearchValue,
   setUserShortType,
   clearUserResultFilms,
+  setStatus,
 } = userFilterSlice.actions;
 
 export default userFilterSlice.reducer;
