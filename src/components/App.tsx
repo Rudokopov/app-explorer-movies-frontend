@@ -22,6 +22,7 @@ import { useSelector } from "react-redux";
 import { selectApiData } from "../app/api/selectors";
 import { Film } from "../app/films/types";
 import { fetchFilms } from "../app/films/slice";
+import PrivateRoute from "./PrivateRoute/PrivateRoute";
 
 export type AuthParams = {
   name?: string;
@@ -60,7 +61,7 @@ const App: React.FC = () => {
   }, []);
 
   const login = async (email: string, password: string) => {
-    const res = await dispatch(fetchLogin({ email, password })); // не забыть типизировать, возвращает юзака
+    const res = await dispatch(fetchLogin({ email, password }));
     if (res.payload) {
       const token = res.payload as LoginResponse;
       localStorage.setItem("jwt", token.token);
@@ -96,12 +97,16 @@ const App: React.FC = () => {
     <main className={styles.container}>
       <Routes>
         <Route path="/" element={<Main />} />
-        <Route path="/me" element={<UserPage />} />
-        <Route path="/films" element={<Films children={<Cards />} />} />
+        <Route path="/me" element={<PrivateRoute element={<UserPage />} />} />
+        <Route
+          path="/films"
+          element={<PrivateRoute element={<Films children={<Cards />} />} />}
+        />
         <Route
           path="/films/saved"
-          element={<Films children={<CardUser />} />}
+          element={<PrivateRoute element={<Films children={<CardUser />} />} />}
         />
+
         <Route
           path="/signin"
           element={
