@@ -23,6 +23,7 @@ import { selectApiData } from "../app/api/selectors";
 import { Film } from "../app/films/types";
 import { fetchFilms } from "../app/films/slice";
 import PrivateRoute from "./PrivateRoute/PrivateRoute";
+import { clearFilterState } from "../app/filters/slice";
 
 export type AuthParams = {
   name?: string;
@@ -36,11 +37,22 @@ const App: React.FC = () => {
   const { status } = useSelector(selectApiData);
 
   const getUser = async () => {
-    const res = await dispatch(fetchUser());
-    const currentUser = res.payload as User;
-    if (currentUser) {
-      dispatch(setUser(currentUser));
-      dispatch(setLogin(true));
+    try {
+      const res = await dispatch(fetchUser());
+      const currentUser = res.payload as User;
+      if (currentUser) {
+        dispatch(setUser(currentUser));
+        dispatch(setLogin(true));
+      }
+      if (status === "error") {
+        dispatch(clearFilterState());
+        dispatch(setLogin(false));
+        localStorage.removeItem("jwt"); // Если сервер вернет rejected то выполнится очистка данных о сессии пользователя
+      }
+    } catch (err: any) {
+      alert(
+        `Произошла ошибка при получении данных об пользователе ${err.message} `
+      );
     }
   };
 
@@ -58,14 +70,14 @@ const App: React.FC = () => {
   useEffect(() => {
     getUser();
     getFilms();
-  }, []);
+  }, [navigate]);
 
   const login = async (email: string, password: string) => {
     const res = await dispatch(fetchLogin({ email, password }));
     if (res.payload) {
       const token = res.payload as LoginResponse;
       localStorage.setItem("jwt", token.token);
-      navigate("/");
+      navigate("/films");
     } else {
       localStorage.removeItem("jwt");
     }

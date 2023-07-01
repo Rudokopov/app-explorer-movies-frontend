@@ -11,6 +11,16 @@ import {
   User,
 } from "./types";
 
+import {
+  fetchUserData,
+  loginUser,
+  registerUser,
+  updateUser,
+  createMovie,
+  getUserMovies,
+  removeMovie,
+} from "./api";
+
 const initialState: ApiSliceState = {
   userFilms: [],
   user: {
@@ -25,127 +35,76 @@ const initialState: ApiSliceState = {
 
 export const fetchUser = createAsyncThunk<User>(
   "user/fetchUserData",
-  async (_, { getState }) => {
+  async (_) => {
     const token = localStorage.getItem("jwt");
     if (!token) {
       throw new Error("Token not found");
     }
-    const response = await axios.get<User>(
-      "https://api.movie-app.nomoredomains.rocks/users/me",
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
 
-    return response.data;
+    return fetchUserData(token);
   }
 );
 
 export const fetchLogin = createAsyncThunk<LoginResponse, LoginParams>(
   "user/fetchLogin",
   async ({ email, password }) => {
-    const response = await axios.post<LoginResponse>(
-      "https://api.movie-app.nomoredomains.rocks/signin",
-      {
-        email: email,
-        password: password,
-      }
-    );
-    return response.data as LoginResponse;
+    return loginUser(email, password);
   }
 );
 
 export const fetchRegister = createAsyncThunk<User, RegisterParams>(
   "user/fetchRegister",
   async ({ name, email, password }) => {
-    const response = await axios.post(
-      "https://api.movie-app.nomoredomains.rocks/signup",
-      {
-        name: name,
-        email: email,
-        password: password,
-      }
-    );
-    return response.data;
+    return registerUser(name, email, password);
   }
 );
 
 export const fetchUserUpdate = createAsyncThunk<User, UpdateUserParams>(
   "user/fetchUserUpdate",
-  async ({ name, email }, { getState }) => {
+  async ({ name, email }) => {
     const token = localStorage.getItem("jwt");
-    const headers = { Authorization: `Bearer ${token}` };
-
-    const response = await axios.patch(
-      "https://api.movie-app.nomoredomains.rocks/users/me",
-      {
-        name: name,
-        email: email,
-      },
-      { headers }
-    );
-
-    return response.data;
+    if (token) {
+      return updateUser(name, email, token);
+    }
+    return;
   }
 );
 
 export const fetchCreateMovie = createAsyncThunk<
   MovieFromBackend[],
   MovieFromBackend
->(
-  "user/fetchUserMovies",
-  async ({ movieId, nameRU, description, duration, trailerLink, image }) => {
-    const token = localStorage.getItem("jwt");
-    const headers = { Authorization: `Bearer ${token}` };
-    const response = await axios.post(
-      "https://api.movie-app.nomoredomains.rocks/movies",
-      {
-        movieId,
-        nameRU,
-        description,
-        duration,
-        trailerLink,
-        image,
-      },
-      { headers }
-    );
+>("user/fetchUserMovies", async (props) => {
+  const token = localStorage.getItem("jwt");
 
-    return response.data;
+  if (token) {
+    return createMovie(token, {
+      ...props,
+    });
   }
-);
+  return;
+});
 
 export const fetchGetUserMovies = createAsyncThunk<MovieFromBackend[]>(
   "user/fetchGetUserMovies",
   async () => {
     const token = localStorage.getItem("jwt");
-    const headers = { Authorization: `Bearer ${token}` };
-    const response = await axios.get(
-      "https://api.movie-app.nomoredomains.rocks/movies",
-      {
-        headers,
-      }
-    );
 
-    return response.data;
+    if (token) {
+      return getUserMovies(token);
+    }
+    return;
   }
 );
 
-export const fetchRemoveMovie = createAsyncThunk<MovieFromBackend[], Number>(
+export const fetchRemoveMovie = createAsyncThunk<MovieFromBackend[], number>(
   "user/fetchRemoveMovie",
   async (movieId) => {
     const token = localStorage.getItem("jwt");
-    const headers = { Authorization: `Bearer ${token}` };
-    const response = await axios.delete(
-      "https://api.movie-app.nomoredomains.rocks/movies",
-      {
-        data: { movieId },
-        headers,
-      }
-    );
 
-    return response.data;
+    if (token) {
+      return removeMovie(token, movieId);
+    }
+    return;
   }
 );
 
@@ -174,6 +133,17 @@ const apiSlice = createSlice({
   },
 
   extraReducers: (builder) => {
+    // Получение данных пользователя
+    builder.addCase(fetchUser.pending, (state) => {
+      state.status = Status.LOADING;
+    });
+    builder.addCase(fetchUser.fulfilled, (state) => {
+      state.status = Status.SUCCESS;
+    });
+    builder.addCase(fetchUser.rejected, (state) => {
+      state.status = Status.ERROR;
+    });
+
     // Авторизация
     builder.addCase(fetchLogin.pending, (state) => {
       state.status = Status.LOADING;

@@ -141,11 +141,12 @@ const Search: React.FC = () => {
           }
         });
         dispatch(setResultFilms(filteredFilms));
-        dispatch(setFilterStatus(Status.SUCCESS));
+
         if (filteredFilms.length <= 0) {
           dispatch(setFilterStatus(Status.ERROR)); // Импровизированная проверка для отображения пейлоудера на клиенте
         }
       }
+      // dispatch(setFilterStatus(Status.SUCCESS));
     } catch (err: any) {
       alert(`Произошла ошибка при поиске фильмов ${err.message}`);
     }

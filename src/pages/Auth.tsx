@@ -13,7 +13,7 @@ const Auth: React.FC<AuthProps> = (props) => {
 
   useEffect(() => {
     if (isLogin) {
-      navigate(-1);
+      navigate("/films");
     }
   }, [isLogin]);
   const { children } = props;
