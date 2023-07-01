@@ -29,7 +29,10 @@ const CardUser: React.FC = () => {
     if (res.payload) {
       const deletedMovie = res.payload as MovieFromBackend;
       dispatch(removeFilm(deletedMovie.movieId));
-      getUserFilms();
+
+      setUserDataFilms((prevFilms) =>
+        prevFilms.filter((film) => film.movieId !== movieId)
+      );
     }
   };
 
@@ -75,7 +78,7 @@ const CardUser: React.FC = () => {
                   duration={item.duration}
                   trailerLink={item.trailerLink}
                   image={item.image}
-                  key={i}
+                  key={item.movieId}
                   myFilmsPage
                   removeUserFilm={removeUserFilm}
                 />
