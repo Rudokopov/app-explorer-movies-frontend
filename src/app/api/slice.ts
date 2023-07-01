@@ -63,8 +63,9 @@ export const fetchUserUpdate = createAsyncThunk<User, UpdateUserParams>(
   "user/fetchUserUpdate",
   async ({ name, email }) => {
     const token = localStorage.getItem("jwt");
+    console.log(token);
     if (token) {
-      return updateUser(name, email, token);
+      return updateUser({ name, email }, token);
     }
     return;
   }

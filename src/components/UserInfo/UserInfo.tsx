@@ -83,7 +83,9 @@ const UserInfo: React.FC = () => {
         dispatch(setUser(currentUser));
         setCorrect(true);
         alert(`Информация успешно обновлена!`);
+        return;
       }
+      alert(`Произошла ошибка, попробуйте в другой раз`);
     } catch (err: any) {
       alert(
         `Ошибка произошла при обновлении данных пользователя ${err.message}`

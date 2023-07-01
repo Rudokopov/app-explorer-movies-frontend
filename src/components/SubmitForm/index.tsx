@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import logo from "../../images/logo.svg";
 import styles from "./submitform.module.scss";
 import { Link } from "react-router-dom";
-import { Status } from "../../app/api/types";
+import { useSelector } from "react-redux";
+import { selectApiData } from "../../app/api/selectors";
 
 type UserFormProps = {
   title: "Добро пожаловать!" | "Рады видеть!";
@@ -23,6 +24,7 @@ const UserForm: React.FC<UserFormProps> = (props) => {
   const [emailError, setEmailError] = useState<string>("");
   const [passwordError, setPasswordError] = useState<string>("");
   const [isValid, setValid] = useState<boolean>(true);
+  const { status } = useSelector(selectApiData);
 
   useEffect(() => {
     const isFormValid = () => {
@@ -35,6 +37,13 @@ const UserForm: React.FC<UserFormProps> = (props) => {
 
     setValid(!isFormValid());
   }, [name, email, password, emailError, passwordError, formType]);
+
+  useEffect(() => {
+    if (status === "loading") {
+      setValid(true);
+      return;
+    }
+  }, [status]);
 
   const validateEmail = (value: string) => {
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -90,7 +99,7 @@ const UserForm: React.FC<UserFormProps> = (props) => {
     }
 
     submitOption(email, password, name);
-    if (Status.SUCCESS) {
+    if (status === "success") {
       reseter();
     }
   };

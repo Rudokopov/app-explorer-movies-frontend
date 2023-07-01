@@ -70,7 +70,7 @@ const App: React.FC = () => {
   useEffect(() => {
     getUser();
     getFilms();
-  }, [navigate]);
+  }, []);
 
   const login = async (email: string, password: string) => {
     const res = await dispatch(fetchLogin({ email, password }));
@@ -79,6 +79,9 @@ const App: React.FC = () => {
       localStorage.setItem("jwt", token.token);
       navigate("/films");
     } else {
+      alert(
+        `Произошла ошибка, проверьте корректность введенных данных или повторите попытку позже`
+      );
       localStorage.removeItem("jwt");
     }
   };
@@ -91,19 +94,29 @@ const App: React.FC = () => {
     try {
       if (name) {
         const res = await dispatch(fetchRegister({ name, email, password }));
-        if (res && status === "success") {
+        if (res.payload) {
           alert(`Вы успешно зарегестрировались!`);
-          const token = res.payload as LoginResponse;
-          localStorage.setItem("jwt", token.token);
-          getUser();
-
+          const userInfo = res.payload as LoginResponse;
+          const token = userInfo.token;
+          localStorage.setItem("jwt", token);
+          dispatch(fetchUser());
           navigate("/films");
+          return;
         }
+      }
+      if (status === "error") {
+        alert(
+          `Произошла ошибка проверьте правильность введенных данных или повторите попытку позже`
+        );
       }
     } catch (err: any) {
       alert(`Произошла ошибка ${err.message}`);
     }
   };
+
+  useEffect(() => {
+    console.log(status);
+  }, [status]);
 
   return (
     <main className={styles.container}>

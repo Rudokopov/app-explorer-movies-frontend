@@ -34,9 +34,8 @@ export const registerUser = async (
 };
 
 export const updateUser = async (
-  token: string,
-  name: string,
-  email: string
+  { name, email }: { name: string; email: string },
+  token: string
 ) => {
   const headers = { Authorization: `Bearer ${token}` };
   const response = await axios.patch(

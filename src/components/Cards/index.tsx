@@ -7,7 +7,6 @@ import { Film } from "../../app/films/types";
 import { useResize } from "../../utils/useResize";
 import {
   fetchCreateMovie,
-  fetchGetUserMovies,
   fetchRemoveMovie,
   removeFilm,
   setFilms,
@@ -18,13 +17,18 @@ import { selectApiData } from "../../app/api/selectors";
 import Loaded from "../Loader/Loader";
 import { setFilterStatus } from "../../app/filters/slice";
 import { Status } from "../../app/filters/types";
+import {
+  ADDITIONAL_CARDS_MD,
+  ADDITIONAL_CARDS_SM,
+  INITIAL_DISPLAYED_CARDS,
+} from "../../utils/constns";
 
 const Cards: React.FC = () => {
   const dispatch = useAppDispatch();
   const windowParam = useResize();
   const { filterStatus } = useSelector(selectFilterData);
 
-  const [displayedCards, setDisplayedCards] = useState(12);
+  const [displayedCards, setDisplayedCards] = useState(INITIAL_DISPLAYED_CARDS);
   const [showMoreButton, setShowMoreButton] = useState(true);
   const { userFilms } = useSelector(selectApiData);
   const { resultFilms } = useSelector(selectFilterData);
@@ -58,9 +62,9 @@ const Cards: React.FC = () => {
   const showMoreCards = () => {
     setDisplayedCards((prevCount) => {
       if (!windowParam.isScreenMd) {
-        return prevCount + 2;
+        return prevCount + ADDITIONAL_CARDS_SM;
       }
-      return prevCount + 3;
+      return prevCount + ADDITIONAL_CARDS_MD;
     });
   };
 
