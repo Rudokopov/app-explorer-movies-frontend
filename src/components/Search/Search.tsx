@@ -10,7 +10,6 @@ import {
   setSearchValue,
   setShortType,
 } from "../../app/filters/slice";
-import { fetchFilms } from "../../app/films/slice";
 import { Film } from "../../app/films/types";
 import { useSelector } from "react-redux";
 import { selectFilterData } from "../../app/filters/selectors";
@@ -22,6 +21,7 @@ import {
 } from "../../app/userFilterFilms/slice";
 import { fetchGetUserMovies } from "../../app/api/slice";
 import { MovieFromBackend, Status } from "../../app/api/types";
+import { selectFilmData } from "../../app/films/selectors";
 
 const CustomSwitch = styled(Switch)(({ theme }) => ({
   width: 36,
@@ -62,6 +62,7 @@ const Search: React.FC = () => {
   const dispatch = useAppDispatch();
   const location = useLocation();
   const { searchValue, isShort, resultFilms } = useSelector(selectFilterData);
+  const { films } = useSelector(selectFilmData);
 
   const [short, setShort] = useState<boolean>(isShort || false);
   const [value, setValue] = useState<string>(searchValue || "");
@@ -123,21 +124,9 @@ const Search: React.FC = () => {
     setShort((prevShort) => !prevShort);
   };
 
-  const getFilms = useCallback(async () => {
-    try {
-      const response = await dispatch(fetchFilms());
-      const films = response.payload as Film[];
-      return films;
-    } catch (err: any) {
-      alert(`Произошла ошибка при получении фильмов ${err.message}`);
-      return [];
-    }
-  }, [dispatch]);
-
   const filterFilms = async () => {
     try {
       dispatch(setFilterStatus(Status.LOADING));
-      const films = await getFilms();
       if (films) {
         const filteredFilms = films.filter((film: Film) => {
           const isMatch = film.nameRU

@@ -1,5 +1,5 @@
 import styles from "./app.module.scss";
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import Main from "../pages/Main";
 import { Route, Routes, useNavigate } from "react-router";
 import Films from "../pages/Films";
@@ -17,10 +17,11 @@ import {
   setLogin,
   setUser,
 } from "../app/api/slice";
-import { LoginResponse, Status, User } from "../app/api/types";
+import { LoginResponse, User } from "../app/api/types";
 import { useSelector } from "react-redux";
 import { selectApiData } from "../app/api/selectors";
-import Loaded from "./Loader/Loader";
+import { Film } from "../app/films/types";
+import { fetchFilms } from "../app/films/slice";
 
 export type AuthParams = {
   name?: string;
@@ -42,8 +43,20 @@ const App: React.FC = () => {
     }
   };
 
+  const getFilms = useCallback(async () => {
+    try {
+      const response = await dispatch(fetchFilms());
+      const films = response.payload as Film[];
+      return films;
+    } catch (err: any) {
+      alert(`Произошла ошибка при получении фильмов ${err.message}`);
+      return [];
+    }
+  }, [dispatch]);
+
   useEffect(() => {
     getUser();
+    getFilms();
   }, []);
 
   const login = async (email: string, password: string) => {

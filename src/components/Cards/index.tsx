@@ -44,7 +44,7 @@ const Cards: React.FC = () => {
       if (res.payload) {
         const newMovie = res.payload as MovieFromBackend;
         dispatch(setFilms([...userFilms, newMovie]));
-        getUserFilms();
+        // getUserFilms();
       }
     } catch (err: any) {
       alert(`Произошла ошибка при добавлении фильма на сервер ${err.name}`);
@@ -124,7 +124,7 @@ const Cards: React.FC = () => {
                 image={`https://api.nomoreparties.co/${card.image.url}`}
                 duration={card.duration}
                 trailerLink={card.trailerLink}
-                key={i}
+                key={card.id}
                 addFavoriteMovie={addFavoriteMovie}
                 removeUserFilm={removeUserFilm}
                 isAddedUser={isAddedUser}

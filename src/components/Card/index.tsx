@@ -43,7 +43,7 @@ const Card: React.FC<CardProps> = (props) => {
     }
 
     return;
-  }; // Необходима обертка что бы это гавно заработало на SVG иконке, другого варианта не нашел
+  };
 
   const handleRemoveMovie: React.MouseEventHandler<SVGSVGElement> = () => {
     if (removeUserFilm) {
