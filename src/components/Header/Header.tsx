@@ -4,12 +4,15 @@ import styles from "./header.module.scss";
 import profileLogo from "../../images/profile-logo.png";
 import burgerIcon from "../../images/burger.svg";
 import BurgerMenu from "../BurgerMenu";
-import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { selectApiData } from "../../app/api/selectors";
+import { Link, NavLink } from "react-router-dom";
 
 const Header: React.FC = () => {
-  const [isLoggin, setLoggin] = useState(true);
   const [isMobile, setMobile] = useState(true);
   const [isMenuOpen, setMenuOpen] = useState(false);
+
+  const { isLogin } = useSelector(selectApiData);
 
   const menuRef = useRef<HTMLDivElement>(null);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
@@ -51,7 +54,7 @@ const Header: React.FC = () => {
 
   return (
     <header className={styles.container}>
-      {!isLoggin ? (
+      {!isLogin ? (
         <>
           <a className={styles.link} href="/">
             <img src={logo} alt="logo" />
@@ -59,17 +62,21 @@ const Header: React.FC = () => {
           <ul className={styles.list}>
             <>
               <li className={styles.listItem}>
-                <button className={styles.button} type="button">
-                  Регистрация
-                </button>
+                <Link className={styles.buttonLink} to="/signup">
+                  <button className={styles.button} type="button">
+                    Регистрация
+                  </button>
+                </Link>
               </li>
               <li className={styles.listItem}>
-                <button
-                  className={`${styles.button} ${styles.dedicated}`}
-                  type="button"
-                >
-                  Войти
-                </button>
+                <Link className={styles.buttonLink} to="/signin">
+                  <button
+                    className={`${styles.button} ${styles.dedicated}`}
+                    type="button"
+                  >
+                    Войти
+                  </button>
+                </Link>
               </li>
             </>
           </ul>
@@ -113,25 +120,43 @@ const Header: React.FC = () => {
                 <li>
                   <button
                     className={`${styles.button} ${
-                      isLoggin ? styles.isLoggin : ""
+                      isLogin ? styles.isLoggin : ""
                     }`}
                     type="button"
                   >
-                    <Link className={styles.buttonLink} to="/films">
-                      Фильмы
-                    </Link>
+                    <NavLink to="/movies" className={styles.buttonLink}>
+                      {({ isActive }) => (
+                        <span
+                          className={
+                            isActive ? ` ${styles.buttonLinkActive}` : ""
+                          }
+                        >
+                          Фильмы
+                        </span>
+                      )}
+                    </NavLink>
                   </button>
                   <button className={styles.button} type="button">
-                    <Link className={styles.buttonLink} to="/films/saved">
-                      Сохраненные фильмы
-                    </Link>
+                    <NavLink to="/films/saved" className={styles.buttonLink}>
+                      {({ isActive }) => (
+                        <span
+                          className={
+                            isActive ? ` ${styles.buttonLinkActive}` : ""
+                          }
+                        >
+                          Сохраненные фильмы
+                        </span>
+                      )}
+                    </NavLink>
                   </button>
                 </li>
               </ul>
               <ul className={styles.list}>
                 <li className={styles.listItem}>
                   <button className={styles.button} type="button">
-                    <img src={profileLogo} alt="Иконка профиля" />
+                    <Link to="/me">
+                      <img src={profileLogo} alt="Иконка профиля" />
+                    </Link>
                   </button>
                 </li>
               </ul>

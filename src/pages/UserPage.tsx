@@ -6,7 +6,7 @@ const UserPage: React.FC = () => {
   return (
     <>
       <Header />
-      <UserInfo title="Педро" email="mech@mail.ru" />
+      <UserInfo />
     </>
   );
 };

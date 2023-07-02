@@ -1,24 +1,72 @@
-import React, { useState } from "react";
+import React from "react";
 import styles from "./card.module.scss";
+import { convertToHours } from "../../utils/utils";
+import { MovieFromBackend } from "../../app/api/types";
 
 type CardProps = {
+  movieId: number;
   image: string;
-  title: string;
-  isSave: boolean;
+  description: string;
+  nameRU: string;
+  trailerLink: string;
   duration: number;
   myFilmsPage?: boolean;
+  isAddedUser?: boolean;
+  addFavoriteMovie?: (params: MovieFromBackend) => Promise<void>;
+  removeUserFilm?: (i: number) => Promise<void>;
 };
 
 const Card: React.FC<CardProps> = (props) => {
-  const { image, title, isSave, duration, myFilmsPage } = props;
+  const {
+    movieId,
+    image,
+    description,
+    nameRU,
+    duration,
+    trailerLink,
+    myFilmsPage,
+    addFavoriteMovie,
+    removeUserFilm,
+    isAddedUser,
+  } = props;
+
+  const handleAddMovie: React.MouseEventHandler<SVGSVGElement> = () => {
+    if (addFavoriteMovie) {
+      addFavoriteMovie({
+        movieId,
+        image,
+        description,
+        nameRU,
+        duration,
+        trailerLink,
+      });
+    }
+
+    return;
+  };
+
+  const handleRemoveMovie: React.MouseEventHandler<SVGSVGElement> = () => {
+    if (removeUserFilm) {
+      const id = Number(movieId);
+      removeUserFilm(id);
+    }
+  };
+
   return (
     <div className={styles.container}>
-      <img className={styles.image} src={image} alt="Картинка фильма" />
+      <a target="_blank" rel="noreferrer" href={trailerLink}>
+        <img className={styles.image} src={image} alt={nameRU} />
+      </a>
       <div className={styles.content}>
-        <h3 className={styles.title}>{title}</h3>
+        <h3 className={styles.title}>{nameRU}</h3>
         {!myFilmsPage ? (
           <svg
-            className={isSave ? `${styles.active}` : ""}
+            onClick={isAddedUser ? handleRemoveMovie : handleAddMovie}
+            className={
+              isAddedUser
+                ? `${styles.addIcon} ${styles.active}`
+                : `${styles.addIcon}`
+            }
             width="28"
             height="28"
             viewBox="0 0 28 28"
@@ -73,6 +121,8 @@ const Card: React.FC<CardProps> = (props) => {
           </svg>
         ) : (
           <svg
+            onClick={handleRemoveMovie}
+            className={styles.deleteIcon}
             width="16"
             height="16"
             viewBox="0 0 16 16"
@@ -88,7 +138,7 @@ const Card: React.FC<CardProps> = (props) => {
           </svg>
         )}
       </div>
-      <p className={styles.description}>{duration}</p>
+      <p className={styles.description}>{convertToHours(duration)}</p>
     </div>
   );
 };

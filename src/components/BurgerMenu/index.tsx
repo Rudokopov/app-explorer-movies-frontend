@@ -31,8 +31,8 @@ const BurgerMenu: React.FC<BurgerMenuProps> = (props) => {
           Главная
         </Link>
         <Link
-          className={currentPath === "/films" ? styles.active : ""}
-          to="/films"
+          className={currentPath === "/movies" ? styles.active : ""}
+          to="/movies"
         >
           Фильмы
         </Link>
@@ -44,7 +44,7 @@ const BurgerMenu: React.FC<BurgerMenuProps> = (props) => {
         </Link>
       </div>
       <div className={styles.iconProfile}>
-        <img src={profileIcon} />
+        <img src={profileIcon} alt="Иконка профиля" />
       </div>
     </div>
   );

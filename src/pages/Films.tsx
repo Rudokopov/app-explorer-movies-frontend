@@ -1,7 +1,6 @@
-import React, { ReactComponentElement } from "react";
+import React from "react";
 import Header from "../components/Header/Header";
 import Search from "../components/Search/Search";
-import Cards from "../components/Cards/Cards";
 import Footer from "../components/Footer/Footer";
 
 type FilmsProps = {

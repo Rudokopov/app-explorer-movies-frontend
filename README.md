@@ -1,8 +1,12 @@
-# [app-explorer-movies-frontend](https://app-explorer-movies-frontend.vercel.app/)
+# [app-explorer-movies-frontend](https://app-explorer-movies-frontend-git-level-3-rudokopov.vercel.app/)
 
 ## Ссылка на макет
 
 https://drive.google.com/file/d/1pz_49SBWQxA_NCbsmSJWv937jMgBaQSI/view?usp=sharing
+
+## Ссылка на pull request
+
+https://github.com/Rudokopov/app-explorer-movies-frontend/pull/2
 
 ### Инструкция
 
@@ -12,7 +16,7 @@ https://drive.google.com/file/d/1pz_49SBWQxA_NCbsmSJWv937jMgBaQSI/view?usp=shari
 
 1. Главная /
 2. Страница с информацией о пользователе /me
-3. Фильмы /films
+3. Фильмы /movies
 4. Сохраненные фильмы юзера /films/saved
 5. Вход /signin
 6. Регистрация /signup

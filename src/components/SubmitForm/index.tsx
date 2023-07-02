@@ -1,23 +1,117 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import logo from "../../images/logo.svg";
 import styles from "./submitform.module.scss";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { selectApiData } from "../../app/api/selectors";
 
 type UserFormProps = {
   title: "Добро пожаловать!" | "Рады видеть!";
-  submitOption: () => void;
+  submitOption: (
+    email: string,
+    pasword: string,
+    name?: string
+  ) => Promise<void>;
   btnTitle: "Зарегестрироваться" | "Войти";
   formType: "auth" | "reg";
 };
 
 const UserForm: React.FC<UserFormProps> = (props) => {
   const { title, submitOption, btnTitle, formType } = props;
+  const [name, setName] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [emailError, setEmailError] = useState<string>("");
+  const [passwordError, setPasswordError] = useState<string>("");
+  const [isValid, setValid] = useState<boolean>(true);
+  const { status } = useSelector(selectApiData);
+
+  useEffect(() => {
+    const isFormValid = () => {
+      if (formType === "reg") {
+        return !!(name && email && password && !emailError && !passwordError);
+      } else {
+        return !!(email && password && !emailError && !passwordError);
+      }
+    };
+
+    setValid(!isFormValid());
+  }, [name, email, password, emailError, passwordError, formType]);
+
+  useEffect(() => {
+    if (status === "loading") {
+      setValid(true);
+      return;
+    }
+  }, [status]);
+
+  const validateEmail = (value: string) => {
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailPattern.test(value)) {
+      setEmailError("Некорректный формат электронной почты");
+    } else {
+      setEmailError("");
+    }
+  };
+
+  const validatePassword = (value: string) => {
+    if (value.length < 4) {
+      setPasswordError("Пароль должен содержать не менее 4 символов");
+    } else {
+      setPasswordError("");
+    }
+  };
+
+  const onChangeName = (evt: React.ChangeEvent<HTMLInputElement>) => {
+    if (evt.target.value.charAt(0) === " ") {
+      alert("Первый символ не может быть пробелом");
+      return;
+    }
+    setName(evt.target.value);
+  };
+
+  const onChangeEmail = (evt: React.ChangeEvent<HTMLInputElement>) => {
+    setEmail(evt.target.value);
+    validateEmail(evt.target.value);
+  };
+
+  const onChangePassword = (evt: React.ChangeEvent<HTMLInputElement>) => {
+    if (evt.target.value.charAt(0) === " ") {
+      alert("Первый символ не может быть пробелом");
+      return;
+    }
+
+    setPassword(evt.target.value);
+    validatePassword(evt.target.value);
+  };
+
+  const reseter = () => {
+    setName("");
+    setEmail("");
+    setPassword("");
+  };
+
+  const onSubmit = (evt: React.FormEvent) => {
+    evt.preventDefault();
+
+    if (emailError || passwordError) {
+      return;
+    }
+
+    submitOption(email, password, name);
+    if (status === "success") {
+      reseter();
+    }
+  };
+
   return (
     <div className={styles.container}>
       <div className={styles.content}>
-        <img className={styles.image} src={logo} alt="логотип" />
+        <Link className={styles.logoLink} to="/">
+          <img className={styles.image} src={logo} alt="логотип" />
+        </Link>
         <h2 className={styles.title}>{title}</h2>
-        <form onSubmit={submitOption} className={styles.form}>
+        <form onSubmit={onSubmit} className={styles.form}>
           <fieldset className={styles.formContainer}>
             {formType === "reg" && (
               <>
@@ -29,7 +123,8 @@ const UserForm: React.FC<UserFormProps> = (props) => {
                   type="text"
                   id="name"
                   name="name"
-                  value={"Василий"}
+                  value={name}
+                  onChange={onChangeName}
                   required
                 />
               </>
@@ -38,52 +133,72 @@ const UserForm: React.FC<UserFormProps> = (props) => {
               Email
             </label>
             <input
-              className={styles.formInput}
+              className={
+                emailError
+                  ? `${styles.formInput} ${styles.error}`
+                  : `${styles.formInput}`
+              }
               type="email"
               id="email"
               name="email"
-              value={"pochta@yandex.ru"}
+              value={email}
+              onChange={onChangeEmail}
               required
             />
+            {emailError && (
+              <span className={styles.formMessage}>{emailError}</span>
+            )}
 
             <label className={styles.formLabel} htmlFor="password">
               Пароль
             </label>
             <input
-              className={`${styles.formInput} ${styles.error}`}
+              className={
+                passwordError
+                  ? `${styles.formInput} ${styles.error}`
+                  : `${styles.formInput}`
+              }
               type="password"
               id="password"
               name="password"
-              value={"1234567890"}
+              value={password}
+              onChange={onChangePassword}
               required
             />
-            <span className={styles.formMessage}>Что-то пошло не так...</span>
+            {passwordError && (
+              <span className={styles.formMessage}>{passwordError}</span>
+            )}
           </fieldset>
+
+          <div className={styles.tools}>
+            <button
+              className={styles.toolsSubmit}
+              disabled={isValid}
+              type="submit"
+            >
+              {btnTitle}
+            </button>
+            {formType === "auth" ? (
+              <>
+                <p className={styles.toolsParagraph}>
+                  Ещё не зарегистрированы?
+                  <Link to="/signup" className={styles.toolsParagraphLink}>
+                    Регистрация
+                  </Link>
+                </p>
+              </>
+            ) : (
+              <>
+                <p className={styles.toolsParagraph}>
+                  Уже зарегестрированы?
+                  <Link to="/signin" className={styles.toolsParagraphLink}>
+                    Войти
+                  </Link>
+                </p>
+              </>
+            )}
+          </div>
         </form>
-        <div className={styles.tools}>
-          <button className={styles.toolsSubmit} type="submit">
-            {btnTitle}
-          </button>
-          {formType === "auth" ? (
-            <>
-              <p className={styles.toolsParagraph}>
-                Ещё не зарегистрированы?
-                <Link to="/signup" className={styles.toolsParagraph_link}>
-                  Регистрация
-                </Link>
-              </p>
-            </>
-          ) : (
-            <>
-              <p className={styles.toolsParagraph}>
-                Уже зарегестрированы?
-                <Link to="/signin" className={styles.toolsParagraph_link}>
-                  Войти
-                </Link>
-              </p>
-            </>
-          )}
-        </div>
       </div>
     </div>
   );
