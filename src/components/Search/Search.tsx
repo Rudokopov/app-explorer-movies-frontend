@@ -22,6 +22,7 @@ import {
 import { fetchGetUserMovies } from "../../app/api/slice";
 import { MovieFromBackend, Status } from "../../app/api/types";
 import { selectFilmData } from "../../app/films/selectors";
+import { shortFilmDuration } from "../../utils/constns";
 
 const CustomSwitch = styled(Switch)(({ theme }) => ({
   width: 36,
@@ -132,7 +133,7 @@ const Search: React.FC = () => {
           const isMatch = film.nameRU
             .toLowerCase()
             .includes(value.toLowerCase());
-          const hasValidDuration = film.duration > 40;
+          const hasValidDuration = film.duration > shortFilmDuration;
 
           if (short) {
             return isMatch && !hasValidDuration;
@@ -190,7 +191,7 @@ const Search: React.FC = () => {
           const isMatch = film.nameRU
             .toLowerCase()
             .includes(savedFilmValue.toLowerCase());
-          const hasValidDuration = film.duration > 40;
+          const hasValidDuration = film.duration > shortFilmDuration;
 
           if (savedFilmIsShort) {
             return isMatch && !hasValidDuration;

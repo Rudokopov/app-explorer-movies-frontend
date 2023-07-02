@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import Card from "../Card";
 import styles from "./cards.module.scss";
 import { useSelector } from "react-redux";
@@ -18,9 +18,11 @@ import Loaded from "../Loader/Loader";
 import { setFilterStatus } from "../../app/filters/slice";
 import { Status } from "../../app/filters/types";
 import {
-  ADDITIONAL_CARDS_MD,
+  ADDITIONAL_CARDS_XL,
   ADDITIONAL_CARDS_SM,
   INITIAL_DISPLAYED_CARDS,
+  filmsDisplayedScreenMD,
+  filmsDisplayedScreenSM,
 } from "../../utils/constns";
 
 const Cards: React.FC = () => {
@@ -64,7 +66,7 @@ const Cards: React.FC = () => {
       if (!windowParam.isScreenMd) {
         return prevCount + ADDITIONAL_CARDS_SM;
       }
-      return prevCount + ADDITIONAL_CARDS_MD;
+      return prevCount + ADDITIONAL_CARDS_XL;
     });
   };
 
@@ -88,10 +90,10 @@ const Cards: React.FC = () => {
   useEffect(() => {
     setDisplayedCards((prevCount) => {
       if (!windowParam.isScreenMd && windowParam.isScreenSm) {
-        return prevCount - 4;
+        return (prevCount = filmsDisplayedScreenMD);
       }
       if (!windowParam.isScreenSm) {
-        return prevCount - 7;
+        return (prevCount = filmsDisplayedScreenSM);
       }
       return prevCount;
     });
