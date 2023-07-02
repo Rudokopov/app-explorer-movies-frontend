@@ -87,8 +87,11 @@ const Cards: React.FC = () => {
 
   useEffect(() => {
     setDisplayedCards((prevCount) => {
-      if (!windowParam.isScreenMd) {
+      if (!windowParam.isScreenMd && windowParam.isScreenSm) {
         return prevCount - 4;
+      }
+      if (!windowParam.isScreenSm) {
+        return prevCount - 7;
       }
       return prevCount;
     });
