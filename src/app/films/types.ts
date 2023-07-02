@@ -17,5 +17,5 @@ export enum Status {
 
 export type FilmSliceState = {
   films: Film[];
-  status: Status.LOADING | Status.SUCCESS | Status.ERROR;
+  filmStatus: Status.LOADING | Status.SUCCESS | Status.ERROR;
 };

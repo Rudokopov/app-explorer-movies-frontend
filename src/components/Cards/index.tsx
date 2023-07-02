@@ -76,6 +76,7 @@ const Cards: React.FC = () => {
       if (res.payload) {
         const deletedMovie = res.payload as MovieFromBackend;
         dispatch(removeFilm(deletedMovie.movieId));
+
         dispatch(setFilterStatus(Status.SUCCESS));
       }
     } catch (err: any) {

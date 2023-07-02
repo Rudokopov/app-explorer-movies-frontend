@@ -20,10 +20,13 @@ import {
 import { LoginResponse, User } from "../app/api/types";
 import { useSelector } from "react-redux";
 import { selectApiData } from "../app/api/selectors";
-import { Film } from "../app/films/types";
+import { Film, Status } from "../app/films/types";
 import { fetchFilms } from "../app/films/slice";
 import PrivateRoute from "./PrivateRoute/PrivateRoute";
 import { clearFilterState } from "../app/filters/slice";
+import { selectFilmData } from "../app/films/selectors";
+import { setFilmStatus } from "../app/films/slice";
+import GlobalLoader from "./GlobalLoader/GlobalLoader";
 
 export type AuthParams = {
   name?: string;
@@ -34,7 +37,8 @@ export type AuthParams = {
 const App: React.FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const { status, user } = useSelector(selectApiData);
+  const { status } = useSelector(selectApiData);
+  const { filmStatus } = useSelector(selectFilmData);
 
   const getUser = async () => {
     try {
@@ -123,6 +127,7 @@ const App: React.FC = () => {
 
   return (
     <main className={styles.container}>
+      {filmStatus === "loading" && <GlobalLoader />}
       <Routes>
         <Route path="/" element={<Main />} />
         <Route path="/me" element={<PrivateRoute element={<UserPage />} />} />

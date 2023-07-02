@@ -140,13 +140,14 @@ const Search: React.FC = () => {
             return isMatch;
           }
         });
-        dispatch(setResultFilms(filteredFilms));
+        setTimeout(() => {
+          dispatch(setResultFilms(filteredFilms));
+        }, 800); // Поскольку поиск происходит по уже загруженным фильмам, он быстрый, поэтому это нужно для иммитации загрузки
 
         if (filteredFilms.length <= 0) {
           dispatch(setFilterStatus(Status.ERROR)); // Импровизированная проверка для отображения пейлоудера на клиенте
         }
       }
-      // dispatch(setFilterStatus(Status.SUCCESS));
     } catch (err: any) {
       alert(`Произошла ошибка при поиске фильмов ${err.message}`);
     }

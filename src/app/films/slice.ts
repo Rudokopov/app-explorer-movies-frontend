@@ -4,7 +4,7 @@ import { FilmSliceState, Film, Status } from "./types";
 
 const initialState: FilmSliceState = {
   films: [],
-  status: Status.LOADING,
+  filmStatus: Status.LOADING,
 };
 
 export const fetchFilms = createAsyncThunk<Film[]>(
@@ -24,22 +24,25 @@ const filmSlice = createSlice({
     setFilms(state, action: PayloadAction<Film[]>) {
       state.films = action.payload;
     },
+    setFilmStatus(state, action: PayloadAction<Status>) {
+      state.filmStatus = action.payload;
+    },
   },
 
   extraReducers: (builder) => {
     builder.addCase(fetchFilms.pending, (state) => {
       state.films = [];
-      state.status = Status.LOADING;
+      state.filmStatus = Status.LOADING;
     });
     builder.addCase(fetchFilms.fulfilled, (state, action) => {
       state.films = action.payload;
-      state.status = Status.SUCCESS;
+      state.filmStatus = Status.SUCCESS;
     });
     builder.addCase(fetchFilms.rejected, (state) => {
-      state.status = Status.ERROR;
+      state.filmStatus = Status.ERROR;
       state.films = [];
     });
   },
 });
-export const { setFilms } = filmSlice.actions;
+export const { setFilms, setFilmStatus } = filmSlice.actions;
 export default filmSlice.reducer;
