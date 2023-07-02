@@ -12,7 +12,9 @@
   backdrop-filter: blur(10px);
   border-radius: 15px;
   border: 1px solid rgba(43, 43, 43, 0.568);
-  position: absolute;
+  position: fixed;
+  top: 0;
+  left: 0;
   width: 100vw;
   height: 100vh;
   display: flex;

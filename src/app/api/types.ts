@@ -13,7 +13,7 @@ export enum Status {
 
 export type ApiSliceState = {
   userFilms: MovieFromBackend[];
-  user: User;
+  user: User | undefined;
   status: Status;
   isLogin: boolean;
 };

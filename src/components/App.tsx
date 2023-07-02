@@ -17,15 +17,14 @@ import {
   setLogin,
   setUser,
 } from "../app/api/slice";
-import { LoginResponse, User } from "../app/api/types";
+import { LoginResponse, Status, User } from "../app/api/types";
 import { useSelector } from "react-redux";
 import { selectApiData } from "../app/api/selectors";
-import { Film, Status } from "../app/films/types";
+import { Film } from "../app/films/types";
 import { fetchFilms } from "../app/films/slice";
 import PrivateRoute from "./PrivateRoute/PrivateRoute";
 import { clearFilterState } from "../app/filters/slice";
 import { selectFilmData } from "../app/films/selectors";
-import { setFilmStatus } from "../app/films/slice";
 import GlobalLoader from "./GlobalLoader/GlobalLoader";
 
 export type AuthParams = {
@@ -37,7 +36,7 @@ export type AuthParams = {
 const App: React.FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const { status } = useSelector(selectApiData);
+  const { status, isLogin } = useSelector(selectApiData);
   const { filmStatus } = useSelector(selectFilmData);
 
   const getUser = async () => {
@@ -47,11 +46,15 @@ const App: React.FC = () => {
       if (currentUser) {
         dispatch(setUser(currentUser));
         dispatch(setLogin(true));
+
+        return;
       }
       if (status === "error") {
         dispatch(clearFilterState());
         dispatch(setLogin(false));
         localStorage.removeItem("jwt"); // Если сервер вернет rejected то выполнится очистка данных о сессии пользователя
+
+        return;
       }
     } catch (err: any) {
       alert(
@@ -78,6 +81,10 @@ const App: React.FC = () => {
   useEffect(() => {
     getFilms();
   }, []);
+
+  useEffect(() => {
+    console.log(isLogin);
+  }, [isLogin]);
 
   const login = async (email: string, password: string) => {
     const res = await dispatch(fetchLogin({ email, password }));
@@ -121,13 +128,10 @@ const App: React.FC = () => {
     }
   };
 
-  useEffect(() => {
-    console.log(status);
-  }, [status]);
-
   return (
     <main className={styles.container}>
       {filmStatus === "loading" && <GlobalLoader />}
+      {status === "loading" && <GlobalLoader />}
       <Routes>
         <Route path="/" element={<Main />} />
         <Route path="/me" element={<PrivateRoute element={<UserPage />} />} />

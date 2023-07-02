@@ -27,7 +27,7 @@ const UserInfo: React.FC = () => {
       setCorrect(true);
       return;
     }
-    if (value === user.email) {
+    if (value === user?.email) {
       setCorrect(true);
       return;
     }
@@ -42,7 +42,7 @@ const UserInfo: React.FC = () => {
       setCorrect(true);
       return;
     }
-    if (value === user.name) {
+    if (value === user?.name) {
       setCorrect(true);
       return;
     }
@@ -52,8 +52,10 @@ const UserInfo: React.FC = () => {
   };
 
   useEffect(() => {
-    setInputName(user.name);
-    setInputEmail(user.email);
+    if (user) {
+      setInputName(user.name);
+      setInputEmail(user.email);
+    }
   }, [user]);
 
   const onChangeName = (evt: React.ChangeEvent<HTMLInputElement>) => {
@@ -102,7 +104,7 @@ const UserInfo: React.FC = () => {
   };
   return (
     <div className={styles.container}>
-      <h2 className={styles.title}>Привет, {user.name}</h2>
+      <h2 className={styles.title}>Привет, {user?.name}</h2>
       <form onSubmit={onSubmit} action="submit">
         <ul className={styles.list}>
           <li className={styles.listItem}>

@@ -1,4 +1,3 @@
-import axios from "axios";
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import {
   ApiSliceState,
@@ -23,12 +22,7 @@ import {
 
 const initialState: ApiSliceState = {
   userFilms: [],
-  user: {
-    token: "",
-    _id: "",
-    name: "",
-    email: "",
-  },
+  user: undefined,
   status: Status.LOADING,
   isLogin: false,
 };
