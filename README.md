@@ -16,7 +16,7 @@ https://github.com/Rudokopov/app-explorer-movies-frontend/pull/2
 
 1. Главная /
 2. Страница с информацией о пользователе /me
-3. Фильмы /films
+3. Фильмы /movies
 4. Сохраненные фильмы юзера /films/saved
 5. Вход /signin
 6. Регистрация /signup

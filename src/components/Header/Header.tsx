@@ -4,9 +4,9 @@ import styles from "./header.module.scss";
 import profileLogo from "../../images/profile-logo.png";
 import burgerIcon from "../../images/burger.svg";
 import BurgerMenu from "../BurgerMenu";
-import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { selectApiData } from "../../app/api/selectors";
+import { Link, NavLink } from "react-router-dom";
 
 const Header: React.FC = () => {
   const [isMobile, setMobile] = useState(true);
@@ -124,14 +124,30 @@ const Header: React.FC = () => {
                     }`}
                     type="button"
                   >
-                    <Link className={styles.buttonLink} to="/films">
-                      Фильмы
-                    </Link>
+                    <NavLink to="/movies" className={styles.buttonLink}>
+                      {({ isActive }) => (
+                        <span
+                          className={
+                            isActive ? ` ${styles.buttonLinkActive}` : ""
+                          }
+                        >
+                          Фильмы
+                        </span>
+                      )}
+                    </NavLink>
                   </button>
                   <button className={styles.button} type="button">
-                    <Link className={styles.buttonLink} to="/films/saved">
-                      Сохраненные фильмы
-                    </Link>
+                    <NavLink to="/films/saved" className={styles.buttonLink}>
+                      {({ isActive }) => (
+                        <span
+                          className={
+                            isActive ? ` ${styles.buttonLinkActive}` : ""
+                          }
+                        >
+                          Сохраненные фильмы
+                        </span>
+                      )}
+                    </NavLink>
                   </button>
                 </li>
               </ul>

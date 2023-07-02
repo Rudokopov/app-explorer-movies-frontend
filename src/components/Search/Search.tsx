@@ -61,7 +61,7 @@ const CustomSwitch = styled(Switch)(({ theme }) => ({
 const Search: React.FC = () => {
   const dispatch = useAppDispatch();
   const location = useLocation();
-  const { searchValue, isShort, resultFilms } = useSelector(selectFilterData);
+  const { searchValue, isShort } = useSelector(selectFilterData);
   const { films } = useSelector(selectFilmData);
 
   const [short, setShort] = useState<boolean>(isShort || false);
@@ -215,7 +215,7 @@ const Search: React.FC = () => {
 
   return (
     <section className={styles.container}>
-      {location.pathname === "/films" && (
+      {location.pathname === "/movies" && (
         <>
           <form
             onSubmit={onSubmitFilter}

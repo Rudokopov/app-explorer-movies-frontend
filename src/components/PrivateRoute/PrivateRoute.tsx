@@ -10,14 +10,12 @@ const PrivateRoute: React.FC<{
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Проверка, были ли получены данные о пользователе
     if (user) {
       setIsLoading(false);
     }
   }, [user]);
 
   if (isLoading) {
-    // Показать загрузочный экран или другой индикатор загрузки
     return <div>Loading...</div>;
   }
 

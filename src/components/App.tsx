@@ -17,7 +17,7 @@ import {
   setLogin,
   setUser,
 } from "../app/api/slice";
-import { LoginResponse, Status, User } from "../app/api/types";
+import { LoginResponse, User } from "../app/api/types";
 import { useSelector } from "react-redux";
 import { selectApiData } from "../app/api/selectors";
 import { Film } from "../app/films/types";
@@ -91,7 +91,7 @@ const App: React.FC = () => {
     if (res.payload) {
       const token = res.payload as LoginResponse;
       localStorage.setItem("jwt", token.token);
-      navigate("/films");
+      navigate("/movies");
     } else {
       alert(
         `Произошла ошибка, проверьте корректность введенных данных или повторите попытку позже`
@@ -114,7 +114,7 @@ const App: React.FC = () => {
           const token = userInfo.token;
           localStorage.setItem("jwt", token);
           await dispatch(fetchUser());
-          navigate("/films");
+          navigate("/movies");
           return;
         }
       }
@@ -130,13 +130,12 @@ const App: React.FC = () => {
 
   return (
     <main className={styles.container}>
-      {filmStatus === "loading" && <GlobalLoader />}
-      {status === "loading" && <GlobalLoader />}
+      {(filmStatus === "loading" || status === "loading") && <GlobalLoader />}
       <Routes>
         <Route path="/" element={<Main />} />
         <Route path="/me" element={<PrivateRoute element={<UserPage />} />} />
         <Route
-          path="/films"
+          path="/movies"
           element={<PrivateRoute element={<Films children={<Cards />} />} />}
         />
         <Route

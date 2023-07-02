@@ -43,27 +43,41 @@
   all: unset;
   margin: 0;
   padding: 0;
-  color: #ffffff;
-  font-family: Inter;
-  font-size: 12px;
-  font-weight: 500;
-  line-height: 16px;
+
   cursor: pointer;
   transition: opacity 0.5s ease;
 
   &Link {
     all: unset;
+    margin: 0;
+    padding: 0;
+    color: #ffffff;
+    font-family: Inter;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 16px;
+    cursor: pointer;
+    transition: opacity 0.5s ease;
+
+    &:focus {
+      border: 1px solid #fff;
+    }
+    &:hover {
+      opacity: 0.5;
+    }
+
+    &Active {
+      opacity: 0.5;
+      cursor: default;
+
+      &:hover {
+        opacity: 0.5;
+      }
+    }
   }
 
   @media (max-width: 550px) {
     font-size: 10px;
-  }
-
-  &:focus {
-    border: 1px solid #fff;
-  }
-  &:hover {
-    opacity: 0.5;
   }
 
   &.isLoggin {
