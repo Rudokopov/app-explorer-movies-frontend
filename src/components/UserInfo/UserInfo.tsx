@@ -57,7 +57,8 @@ const UserInfo: React.FC = () => {
   }, [user]);
 
   const onChangeName = (evt: React.ChangeEvent<HTMLInputElement>) => {
-    if (evt.target.value.includes(" ")) {
+    if (evt.target.value.charAt(0) === " ") {
+      alert("Первый символ не может быть пробелом");
       return;
     }
     setInputName(evt.target.value);

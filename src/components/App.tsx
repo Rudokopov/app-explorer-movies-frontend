@@ -34,7 +34,7 @@ export type AuthParams = {
 const App: React.FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const { status } = useSelector(selectApiData);
+  const { status, user } = useSelector(selectApiData);
 
   const getUser = async () => {
     try {
@@ -69,6 +69,9 @@ const App: React.FC = () => {
 
   useEffect(() => {
     getUser();
+  }, [navigate]); // Сделано для безопасности, если токен будет саботирован, то юзак не сможет перемещаться между рутами, его выкинет и данные о сессии почистятся
+
+  useEffect(() => {
     getFilms();
   }, []);
 
@@ -99,7 +102,7 @@ const App: React.FC = () => {
           const userInfo = res.payload as LoginResponse;
           const token = userInfo.token;
           localStorage.setItem("jwt", token);
-          dispatch(fetchUser());
+          await dispatch(fetchUser());
           navigate("/films");
           return;
         }
